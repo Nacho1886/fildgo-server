@@ -1,0 +1,242 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  id: ID!
+  name: String!
+  lastname: String!
+  username: String!
+  email: String!
+  CreatedAt: DateTime!
+  lastActivity: DateTime!
+  roles: [ValidRoles!]!
+  isActive: Boolean!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""Different types of user roles inside the app."""
+enum ValidRoles {
+  guest
+  user
+  owner
+  admin
+}
+
+type Item {
+  id: ID!
+  title: String!
+  slug: String!
+  tag: ValidTagItems!
+  quantity: ValidUnities!
+  CreatedAt: DateTime!
+  lastActivity: DateTime!
+}
+
+"""Different types of tags for farm items."""
+enum ValidTagItems {
+  citrus
+  legume
+  apple
+  pear
+  stone_fruit
+  banana
+  mango
+  berry
+  tomato
+  avocado
+  leafy_green
+  cruciferous
+  marrow
+  allium
+  plant_stem
+}
+
+"""Different types of unities for farm items."""
+enum ValidUnities {
+  unit
+  Kg
+  L
+}
+
+type Post {
+  id: ID!
+  title: String!
+  description: String!
+  stars: Float!
+  CreatedAt: DateTime!
+  isActive: Boolean!
+}
+
+type Image {
+  id: ID!
+  title: String!
+  url: String!
+  updatedAt: DateTime!
+}
+
+type Session {
+  id: ID!
+  stars: Float!
+  date: DateTime!
+  reserved_quantity: Float!
+  isActive: Boolean!
+  isCanceled: Boolean!
+}
+
+type FollowUp {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Farm {
+  id: ID!
+  title: String!
+  slug: String!
+  tags: [ValidTagFarms!]!
+  CreatedAt: DateTime!
+  lastActivity: DateTime!
+  isActive: Boolean!
+}
+
+"""Different types of tags for a farms."""
+enum ValidTagFarms {
+  aquaculture
+  cooperative
+  hay
+  organic
+  urban
+  nomadic
+  sedentary
+  intensive
+}
+
+type Query {
+  users: [User!]!
+  user(id: Int!): User!
+  items: [Item!]!
+  item(id: Int!): Item!
+  posts: [Post!]!
+  post(id: Int!): Post!
+  images: [Image!]!
+  image(id: Int!): Image!
+  sessions: [Session!]!
+  session(id: Int!): Session!
+  followUps: [FollowUp!]!
+  followUp(id: Int!): FollowUp!
+  farms: [Farm!]!
+  farm(id: Int!): Farm!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  createItem(createItemInput: CreateItemInput!): Item!
+  updateItem(updateItemInput: UpdateItemInput!): Item!
+  removeItem(id: Int!): Item!
+  createPost(createPostInput: CreatePostInput!): Post!
+  updatePost(updatePostInput: UpdatePostInput!): Post!
+  removePost(id: Int!): Post!
+  createImage(createImageInput: CreateImageInput!): Image!
+  updateImage(updateImageInput: UpdateImageInput!): Image!
+  removeImage(id: Int!): Image!
+  createSession(createSessionInput: CreateSessionInput!): Session!
+  updateSession(updateSessionInput: UpdateSessionInput!): Session!
+  removeSession(id: Int!): Session!
+  createFollowUp(createFollowUpInput: CreateFollowUpInput!): FollowUp!
+  updateFollowUp(updateFollowUpInput: UpdateFollowUpInput!): FollowUp!
+  removeFollowUp(id: Int!): FollowUp!
+  createFarm(createFarmInput: CreateFarmInput!): Farm!
+  updateFarm(updateFarmInput: UpdateFarmInput!): Farm!
+  removeFarm(id: Int!): Farm!
+}
+
+input CreateUserInput {
+  email: String!
+  name: String!
+  lastname: String!
+  username: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  email: String
+  name: String
+  lastname: String
+  username: String
+  password: String
+  id: ID!
+  roles: [ValidRoles!]
+  isActive: Boolean
+}
+
+input CreateItemInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateItemInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePostInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateImageInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateImageInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateSessionInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateSessionInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateFollowUpInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateFollowUpInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateFarmInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateFarmInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
