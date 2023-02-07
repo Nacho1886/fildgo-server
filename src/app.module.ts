@@ -5,14 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver } from '@nestjs/apollo';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
-import { JwtService } from '@nestjs/jwt';
+// import { JwtService } from '@nestjs/jwt';
 
 import { UsersModule } from './users/users.module';
 import { ItemsModule } from './items/items.module';
 import { PostsModule } from './posts/posts.module';
 import { ImagesModule } from './images/images.module';
 import { SessionsModule } from './sessions/sessions.module';
-import { FollowUpsModule } from './follow-ups/follow-ups.module';
 import { AuthModule } from './auth/auth.module';
 import { FarmsModule } from './farms/farms.module';
 
@@ -68,8 +67,6 @@ import { FarmsModule } from './farms/farms.module';
     ImagesModule,
 
     SessionsModule,
-
-    FollowUpsModule,
 
     AuthModule,
 

@@ -6,13 +6,14 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
 } from 'typeorm';
+
 import { ValidRoles } from '../../auth/enums/valid-roles.enum';
 import { Item } from '../../items/entities/item.entity';
 import { Farm } from '../../farms/entities/farm.entity';
 import { Session } from '../../sessions/entities/session.entity';
+import { FollowUp } from './follow-up.entity';
+import { Post } from 'src/posts/entities/post.entity';
 
 @Entity({ name: 'users' })
 @ObjectType()
@@ -46,11 +47,11 @@ export class User {
   @Column('text')
   password: string;
 
-  @Column('timestamp')
+  @Column({ type: 'timestamp', name: 'created_at' })
   @Field(() => Date)
   CreatedAt: Date;
 
-  @Column('timestamp')
+  @Column({ type: 'timestamp', name: 'last_activity' })
   @Field(() => Date)
   lastActivity: Date;
 
@@ -64,6 +65,7 @@ export class User {
 
   @Column({
     type: 'boolean',
+    name: 'is_active',
     default: true,
   })
   @Field(() => Boolean)
@@ -73,12 +75,11 @@ export class User {
     nullable: true,
     lazy: true,
   })
-  @JoinColumn({ name: 'userChangedBy' })
+  @JoinColumn({ name: 'changes_by' })
   @Field(() => User, { nullable: true })
   userChangedBy?: User;
 
   @OneToMany(() => Item, (item) => item.user, { lazy: true })
-  @JoinColumn({ name: 'items' })
   @Field(() => [Item])
   items: Item[];
 
@@ -86,14 +87,30 @@ export class User {
   @Field(() => [Farm])
   farms: Farm[];
 
+  @OneToMany(() => Post, (post) => post.user)
+  @JoinColumn()
+  @Field(() => [Post])
+  posts: Post[];
+
   @OneToMany(() => Session, (session) => session.user, { lazy: true })
   @Field(() => [Session])
   sessions: Session[];
 
-  @ManyToMany(() => User, (user) => user.followers)
-  @JoinTable()
-  follows: User[];
+  @OneToMany(() => Item, (item) => item.follows)
+  @JoinColumn({ name: 'item_follows' })
+  itemFollows: Item[];
 
-  @ManyToMany(() => User, (user) => user.follows)
-  followers: User[];
+  @OneToMany(() => Farm, (farm) => farm.follows)
+  @JoinColumn({ name: 'farm_follows' })
+  farmFollows: Farm[];
+
+  @OneToMany(() => FollowUp, (followUp) => followUp.follows)
+  @JoinColumn({ name: 'user_follows' })
+  userFollows: FollowUp[];
+
+  @OneToMany(() => FollowUp, (followUp) => followUp.followers)
+  @JoinColumn()
+  followers: FollowUp[];
+
+  // Location
 }

@@ -2,6 +2,59 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Post {
+  id: ID!
+  title: String!
+  description: String!
+  stars: Float!
+  CreatedAt: DateTime!
+  isActive: Boolean!
+  user: User!
+  farm: Farm!
+  item: Item!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Image {
+  id: ID!
+  title: String!
+  url: String!
+  updatedAt: DateTime!
+  user: User!
+  item: Item!
+  farm: Farm!
+}
+
+type Farm {
+  id: ID!
+  title: String!
+  slug: String!
+  tags: [ValidTagFarms!]!
+  isActive: Boolean!
+  CreatedAt: DateTime!
+  user: User!
+  lastActivity: DateTime
+  lastActivityBy: User
+  posts: [Post!]!
+  images: [Image!]!
+}
+
+"""Different types of tags for a farms."""
+enum ValidTagFarms {
+  aquaculture
+  cooperative
+  hay
+  organic
+  urban
+  nomadic
+  sedentary
+  intensive
+}
+
 type Item {
   id: ID!
   title: String!
@@ -9,8 +62,11 @@ type Item {
   tag: ValidTagItems!
   quantity: ValidUnities!
   CreatedAt: DateTime!
-  lastActivity: DateTime!
+  posts: [Post!]!
+  images: [Image!]!
   user: User!
+  lastActivity: DateTime
+  lastActivityBy: User
 }
 
 """Different types of tags for farm items."""
@@ -39,34 +95,6 @@ enum ValidUnities {
   L
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-type Farm {
-  id: ID!
-  title: String!
-  slug: String!
-  tags: [ValidTagFarms!]!
-  CreatedAt: DateTime!
-  lastActivity: DateTime!
-  isActive: Boolean!
-  user: User!
-}
-
-"""Different types of tags for a farms."""
-enum ValidTagFarms {
-  aquaculture
-  cooperative
-  hay
-  organic
-  urban
-  nomadic
-  sedentary
-  intensive
-}
-
 type Session {
   id: ID!
   stars: Float!
@@ -90,6 +118,7 @@ type User {
   userChangedBy: User
   items: [Item!]!
   farms: [Farm!]!
+  posts: [Post!]!
   sessions: [Session!]!
 }
 
@@ -99,27 +128,6 @@ enum ValidRoles {
   user
   owner
   admin
-}
-
-type Post {
-  id: ID!
-  title: String!
-  description: String!
-  stars: Float!
-  CreatedAt: DateTime!
-  isActive: Boolean!
-}
-
-type Image {
-  id: ID!
-  title: String!
-  url: String!
-  updatedAt: DateTime!
-}
-
-type FollowUp {
-  """Example field (placeholder)"""
-  exampleField: Int!
 }
 
 type Query {
@@ -133,8 +141,6 @@ type Query {
   image(id: Int!): Image!
   sessions: [Session!]!
   session(id: Int!): Session!
-  followUps: [FollowUp!]!
-  followUp(id: Int!): FollowUp!
   farms: [Farm!]!
   farm(id: Int!): Farm!
 }
@@ -155,9 +161,6 @@ type Mutation {
   createSession(createSessionInput: CreateSessionInput!): Session!
   updateSession(updateSessionInput: UpdateSessionInput!): Session!
   removeSession(id: Int!): Session!
-  createFollowUp(createFollowUpInput: CreateFollowUpInput!): FollowUp!
-  updateFollowUp(updateFollowUpInput: UpdateFollowUpInput!): FollowUp!
-  removeFollowUp(id: Int!): FollowUp!
   createFarm(createFarmInput: CreateFarmInput!): Farm!
   updateFarm(updateFarmInput: UpdateFarmInput!): Farm!
   removeFarm(id: Int!): Farm!
@@ -221,17 +224,6 @@ input CreateSessionInput {
 }
 
 input UpdateSessionInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input CreateFollowUpInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateFollowUpInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
