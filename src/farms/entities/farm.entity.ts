@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ValidTagFarms } from '../enums/tag-farm.enum';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity({ name: 'farms' })
 @ObjectType()
@@ -38,4 +39,8 @@ export class Farm {
   @Column('boolean')
   @Field(() => Boolean)
   isActive: boolean;
+
+  @ManyToOne(() => User, (user) => user.farms)
+  @Field(() => User)
+  user: User;
 }

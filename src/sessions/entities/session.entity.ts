@@ -1,5 +1,6 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'sessions' })
 @ObjectType()
@@ -27,4 +28,8 @@ export class Session {
   @Column('boolean')
   @Field(() => Boolean)
   isCanceled: boolean;
+
+  @ManyToOne(() => User, (user) => user.farms)
+  @Field(() => User)
+  user: User;
 }

@@ -1,6 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ValidTagItems, ValidQuantities } from '../enums';
+import { User } from '../../users/entities/user.entity';
 
 @Entity({ name: 'items' })
 @ObjectType()
@@ -35,4 +36,8 @@ export class Item {
   @Column('timestamp')
   @Field(() => Date)
   lastActivity: Date;
+
+  @ManyToOne(() => User, (user) => user.items)
+  @Field(() => User)
+  user: User;
 }

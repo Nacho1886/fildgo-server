@@ -2,31 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: ID!
-  name: String!
-  lastname: String!
-  username: String!
-  email: String!
-  CreatedAt: DateTime!
-  lastActivity: DateTime!
-  roles: [ValidRoles!]!
-  isActive: Boolean!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
-"""Different types of user roles inside the app."""
-enum ValidRoles {
-  guest
-  user
-  owner
-  admin
-}
-
 type Item {
   id: ID!
   title: String!
@@ -35,6 +10,7 @@ type Item {
   quantity: ValidUnities!
   CreatedAt: DateTime!
   lastActivity: DateTime!
+  user: User!
 }
 
 """Different types of tags for farm items."""
@@ -63,6 +39,68 @@ enum ValidUnities {
   L
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Farm {
+  id: ID!
+  title: String!
+  slug: String!
+  tags: [ValidTagFarms!]!
+  CreatedAt: DateTime!
+  lastActivity: DateTime!
+  isActive: Boolean!
+  user: User!
+}
+
+"""Different types of tags for a farms."""
+enum ValidTagFarms {
+  aquaculture
+  cooperative
+  hay
+  organic
+  urban
+  nomadic
+  sedentary
+  intensive
+}
+
+type Session {
+  id: ID!
+  stars: Float!
+  date: DateTime!
+  reserved_quantity: Float!
+  isActive: Boolean!
+  isCanceled: Boolean!
+  user: User!
+}
+
+type User {
+  id: ID!
+  name: String!
+  lastname: String!
+  username: String!
+  email: String!
+  CreatedAt: DateTime!
+  lastActivity: DateTime!
+  roles: [ValidRoles!]!
+  isActive: Boolean!
+  userChangedBy: User
+  items: [Item!]!
+  farms: [Farm!]!
+  sessions: [Session!]!
+}
+
+"""Different types of user roles inside the app."""
+enum ValidRoles {
+  guest
+  user
+  owner
+  admin
+}
+
 type Post {
   id: ID!
   title: String!
@@ -79,40 +117,9 @@ type Image {
   updatedAt: DateTime!
 }
 
-type Session {
-  id: ID!
-  stars: Float!
-  date: DateTime!
-  reserved_quantity: Float!
-  isActive: Boolean!
-  isCanceled: Boolean!
-}
-
 type FollowUp {
   """Example field (placeholder)"""
   exampleField: Int!
-}
-
-type Farm {
-  id: ID!
-  title: String!
-  slug: String!
-  tags: [ValidTagFarms!]!
-  CreatedAt: DateTime!
-  lastActivity: DateTime!
-  isActive: Boolean!
-}
-
-"""Different types of tags for a farms."""
-enum ValidTagFarms {
-  aquaculture
-  cooperative
-  hay
-  organic
-  urban
-  nomadic
-  sedentary
-  intensive
 }
 
 type Query {

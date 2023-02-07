@@ -1,6 +1,18 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+} from 'typeorm';
 import { ValidRoles } from '../../auth/enums/valid-roles.enum';
+import { Item } from '../../items/entities/item.entity';
+import { Farm } from '../../farms/entities/farm.entity';
+import { Session } from '../../sessions/entities/session.entity';
 
 @Entity({ name: 'users' })
 @ObjectType()
@@ -56,4 +68,32 @@ export class User {
   })
   @Field(() => Boolean)
   isActive: boolean;
+
+  @ManyToOne(() => User, (user) => user.userChangedBy, {
+    nullable: true,
+    lazy: true,
+  })
+  @JoinColumn({ name: 'userChangedBy' })
+  @Field(() => User, { nullable: true })
+  userChangedBy?: User;
+
+  @OneToMany(() => Item, (item) => item.user, { lazy: true })
+  @JoinColumn({ name: 'items' })
+  @Field(() => [Item])
+  items: Item[];
+
+  @OneToMany(() => Farm, (farm) => farm.user, { lazy: true })
+  @Field(() => [Farm])
+  farms: Farm[];
+
+  @OneToMany(() => Session, (session) => session.user, { lazy: true })
+  @Field(() => [Session])
+  sessions: Session[];
+
+  @ManyToMany(() => User, (user) => user.followers)
+  @JoinTable()
+  follows: User[];
+
+  @ManyToMany(() => User, (user) => user.follows)
+  followers: User[];
 }
