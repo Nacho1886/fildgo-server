@@ -14,6 +14,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Item } from '../../items/entities/item.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import { Image } from 'src/images/entities/image.entity';
+import { Session } from '../../sessions/entities/session.entity';
 
 @Entity({ name: 'farms' })
 @ObjectType()
@@ -75,7 +76,12 @@ export class Farm {
   @Field(() => [Image])
   images: Image[];
 
+  @OneToMany(() => Session, (session) => session.farm)
+  @JoinColumn()
+  @Field(() => [Session])
+  sessions: Session[];
+
   @ManyToMany(() => Item, (item) => item.farms)
   @JoinTable()
-  items: Item[]; //
+  items: Item[];
 }

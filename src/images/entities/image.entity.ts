@@ -10,6 +10,7 @@ import {
 import { Farm } from 'src/farms/entities/farm.entity';
 import { Item } from 'src/items/entities/item.entity';
 import { User } from 'src/users/entities';
+import { Post } from 'src/posts/entities/post.entity';
 
 @Entity({ name: 'images' })
 @ObjectType()
@@ -18,10 +19,6 @@ export class Image {
   @Field(() => ID)
   id: string;
 
-  @Column('text')
-  @Field(() => String)
-  title: string;
-
   @Column({
     type: 'text',
     unique: true,
@@ -29,7 +26,7 @@ export class Image {
   @Field(() => String)
   url: string;
 
-  @Column('timestamp')
+  @Column({type: 'timestamp', name: 'updated_at'})
   @Field(() => Date)
   updatedAt: Date;
 
@@ -38,13 +35,18 @@ export class Image {
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Item, (item) => item.images)
+  @ManyToOne(() => Item, (item) => item.images, {nullable: true})
   @JoinColumn()
-  @Field(() => Item)
+  @Field(() => Item, {nullable: true})
   item: Item;
 
-  @ManyToOne(() => Farm, (farm) => farm.images)
+  @ManyToOne(() => Farm, (farm) => farm.images, {nullable: true})
   @JoinColumn()
-  @Field(() => Farm)
+  @Field(() => Farm, {nullable: true})
   farm: Farm;
+
+  @ManyToOne(() => Post, (post) => post.images, {nullable: true})
+  @JoinColumn()
+  @Field(() => Post, {nullable: true})
+  post: Post;
 }

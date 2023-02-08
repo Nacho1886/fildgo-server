@@ -96,7 +96,7 @@ export class User {
   @Field(() => [Session])
   sessions: Session[];
 
-  @OneToMany(() => Item, (item) => item.follows)
+  /* @OneToMany(() => Item, (item) => item.follows)
   @JoinColumn({ name: 'item_follows' })
   itemFollows: Item[];
 
@@ -110,7 +110,7 @@ export class User {
 
   @OneToMany(() => FollowUp, (followUp) => followUp.followers)
   @JoinColumn()
-  followers: FollowUp[];
+  followers: FollowUp[]; */
 
   // Location
 }
