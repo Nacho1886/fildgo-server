@@ -46,7 +46,7 @@ export class Post {
   @Column('boolean')
   @Field(() => Boolean)
   isActive: boolean;
-  
+
   @ManyToOne(() => Farm, (farm) => farm.posts)
   @JoinColumn()
   @Field(() => Farm)
@@ -57,12 +57,12 @@ export class Post {
   @Field(() => Item)
   item: Item;
 
-  @OneToMany(() => Image, (image) => image.post, {nullable: true})
-  @Field(() => Image, {nullable: true})
-  images: Image[]
-  
-  @OneToOne(() => Session, session => session.post)
+  @OneToMany(() => Image, (image) => image.post, { nullable: true })
+  @Field(() => Image, { nullable: true })
+  images: Image[];
+
+  @OneToOne(() => Session, (session) => session.post)
   @JoinColumn()
   @Field(() => Session)
-  session: Session
+  session: Session;
 }

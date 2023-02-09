@@ -19,10 +19,6 @@ export class Session {
   @Field(() => ID)
   id: string;
 
-  @Column('numeric')
-  @Field(() => Number)
-  stars: number;
-
   @Column('timestamp')
   @Field(() => Date)
   date: Date;
@@ -35,11 +31,11 @@ export class Session {
   @Field(() => Number)
   reservedQuantity: number;
 
-  @Column({ type: 'boolean', name: 'is_active' })
+  @Column({ type: 'boolean', name: 'is_active', default: true })
   @Field(() => Boolean)
   isActive: boolean;
 
-  @Column({ type: 'boolean', name: 'is_canceled' })
+  @Column({ type: 'boolean', name: 'is_canceled', default: true })
   @Field(() => Boolean)
   isCanceled: boolean;
 

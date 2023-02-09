@@ -26,19 +26,18 @@ export class FollowUp {
   @Field(() => User)
   follower: User;
 
-  @ManyToOne(() => User, {nullable: true})
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ name: 'followed_user_id' })
-  @Field(() => User, {nullable: true})
+  @Field(() => User, { nullable: true })
   followedUser: User;
-  
-  @ManyToOne(() => Item, {nullable: true})
+
+  @ManyToOne(() => Item, { nullable: true })
   @JoinColumn({ name: 'followed_item_id' })
-  @Field(() => Item, {nullable: true})
+  @Field(() => Item, { nullable: true })
   followedItem: Item;
 
-  @ManyToOne(() => Farm, {nullable: true})
+  @ManyToOne(() => Farm, { nullable: true })
   @JoinColumn({ name: 'followed_farm_id' })
-  @Field(() => Farm, {nullable: true})
+  @Field(() => Farm, { nullable: true })
   followedFarm: Farm;
-
 }

@@ -39,7 +39,7 @@ export class Farm {
     array: true,
   })
   @Field(() => [ValidTagFarms])
-  tags: [ValidTagFarms];
+  tags: ValidTagFarms[];
 
   @Column('boolean')
   @Field(() => Boolean)
@@ -82,6 +82,5 @@ export class Farm {
   sessions: Session[];
 
   @ManyToMany(() => Item, (item) => item.farms)
-  @JoinTable()
   items: Item[];
 }

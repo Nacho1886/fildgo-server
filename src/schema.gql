@@ -4,7 +4,6 @@
 
 type Session {
   id: ID!
-  stars: Float!
   date: DateTime!
   typeSession: ValidTypeSsesion!
   reservedQuantity: Float!
@@ -79,10 +78,10 @@ enum ValidTagFarms {
 
 type Item {
   id: ID!
-  title: String!
+  name: String!
   slug: String!
   tag: ValidTagItems!
-  quantity: ValidUnities!
+  quantityUnits: ValidUnities!
   CreatedAt: DateTime!
   posts: [Post!]!
   images: [Image!]!
@@ -108,13 +107,18 @@ enum ValidTagItems {
   marrow
   allium
   plant_stem
+  meat
 }
 
 """Different types of unities for farm items."""
 enum ValidUnities {
   unit
+  pound
+  bag
+  box
   Kg
   L
+  lb
 }
 
 type User {
@@ -184,6 +188,7 @@ input CreateUserInput {
   lastname: String!
   username: String!
   password: String!
+  roles: [ValidRoles!]!
 }
 
 input UpdateUserInput {
@@ -192,62 +197,64 @@ input UpdateUserInput {
   lastname: String
   username: String
   password: String
-  id: ID!
   roles: [ValidRoles!]
+  id: ID!
   isActive: Boolean
 }
 
 input CreateItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  tag: ValidTagItems!
+  quantityUnits: ValidUnities!
 }
 
 input UpdateItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  name: String
+  tag: ValidTagItems
+  quantityUnits: ValidUnities
   id: Int!
 }
 
 input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  stars: Float!
+  title: String!
+  description: String!
 }
 
 input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  stars: Float
+  title: String
+  description: String
   id: Int!
 }
 
 input CreateImageInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  url: String!
 }
 
 input UpdateImageInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  url: String
   id: Int!
 }
 
 input CreateSessionInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  typeSession: ValidTypeSsesion!
+  reservedQuantity: Float!
 }
 
 input UpdateSessionInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  typeSession: ValidTypeSsesion
+  reservedQuantity: Float
   id: Int!
 }
 
 input CreateFarmInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  title: String!
+  tags: [ValidTagFarms!]!
 }
 
 input UpdateFarmInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  title: String
+  tags: [ValidTagFarms!]
   id: Int!
 }

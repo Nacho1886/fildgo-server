@@ -12,7 +12,6 @@ import { ValidRoles } from '../../auth/enums/valid-roles.enum';
 import { Item } from '../../items/entities/item.entity';
 import { Farm } from '../../farms/entities/farm.entity';
 import { Session } from '../../sessions/entities/session.entity';
-import { FollowUp } from './follow-up.entity';
 import { Post } from 'src/posts/entities/post.entity';
 
 @Entity({ name: 'users' })
@@ -95,22 +94,6 @@ export class User {
   @OneToMany(() => Session, (session) => session.user, { lazy: true })
   @Field(() => [Session])
   sessions: Session[];
-
-  /* @OneToMany(() => Item, (item) => item.follows)
-  @JoinColumn({ name: 'item_follows' })
-  itemFollows: Item[];
-
-  @OneToMany(() => Farm, (farm) => farm.follows)
-  @JoinColumn({ name: 'farm_follows' })
-  farmFollows: Farm[];
-
-  @OneToMany(() => FollowUp, (followUp) => followUp.follows)
-  @JoinColumn({ name: 'user_follows' })
-  userFollows: FollowUp[];
-
-  @OneToMany(() => FollowUp, (followUp) => followUp.followers)
-  @JoinColumn()
-  followers: FollowUp[]; */
 
   // Location
 }

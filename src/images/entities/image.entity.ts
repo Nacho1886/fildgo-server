@@ -26,7 +26,7 @@ export class Image {
   @Field(() => String)
   url: string;
 
-  @Column({type: 'timestamp', name: 'updated_at'})
+  @Column({ type: 'timestamp', name: 'updated_at' })
   @Field(() => Date)
   updatedAt: Date;
 
@@ -35,18 +35,18 @@ export class Image {
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Item, (item) => item.images, {nullable: true})
+  @ManyToOne(() => Item, (item) => item.images, { nullable: true })
   @JoinColumn()
-  @Field(() => Item, {nullable: true})
+  @Field(() => Item, { nullable: true })
   item: Item;
 
-  @ManyToOne(() => Farm, (farm) => farm.images, {nullable: true})
+  @ManyToOne(() => Farm, (farm) => farm.images, { nullable: true })
   @JoinColumn()
-  @Field(() => Farm, {nullable: true})
+  @Field(() => Farm, { nullable: true })
   farm: Farm;
 
-  @ManyToOne(() => Post, (post) => post.images, {nullable: true})
+  @ManyToOne(() => Post, (post) => post.images, { nullable: true })
   @JoinColumn()
-  @Field(() => Post, {nullable: true})
+  @Field(() => Post, { nullable: true })
   post: Post;
 }

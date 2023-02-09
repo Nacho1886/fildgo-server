@@ -16,6 +16,7 @@ export enum ValidTagItems {
   marrow = 'marrow',
   allium = 'allium',
   plant_stem = 'plant stem',
+  meat = 'meat',
 }
 
 registerEnumType(ValidTagItems, {

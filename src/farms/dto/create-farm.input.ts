@@ -1,7 +1,11 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
+import { ValidTagFarms } from '../enums/tag-farm.enum';
 
 @InputType()
 export class CreateFarmInput {
-  @Field(() => Int, { description: 'Example field (placeholder)' })
-  exampleField: number;
+  @Field(() => String)
+  title: string;
+
+  @Field(() => [ValidTagFarms])
+  tags: ValidTagFarms[];
 }

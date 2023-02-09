@@ -25,7 +25,7 @@ export class Item {
 
   @Column('text')
   @Field(() => String)
-  title: string;
+  name: string;
 
   @Column({
     type: 'text',
@@ -40,7 +40,7 @@ export class Item {
 
   @Column('text')
   @Field(() => ValidQuantities)
-  quantity: ValidQuantities;
+  quantityUnits: ValidQuantities;
 
   @Column({ type: 'timestamp', name: 'created_at' })
   @Field(() => Date)
