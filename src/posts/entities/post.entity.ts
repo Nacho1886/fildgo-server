@@ -38,7 +38,7 @@ export class Post {
   @Field(() => Date)
   CreatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, { lazy: true })
   @JoinColumn({ name: 'user_creator' })
   @Field(() => User)
   user: User;
@@ -47,21 +47,21 @@ export class Post {
   @Field(() => Boolean)
   isActive: boolean;
 
-  @ManyToOne(() => Farm, (farm) => farm.posts)
+  @ManyToOne(() => Farm, (farm) => farm.posts, { lazy: true })
   @JoinColumn()
   @Field(() => Farm)
   farm: Farm;
 
-  @ManyToOne(() => Item, (item) => item.posts)
+  @ManyToOne(() => Item, (item) => item.posts, { lazy: true })
   @JoinColumn()
   @Field(() => Item)
   item: Item;
 
-  @OneToMany(() => Image, (image) => image.post, { nullable: true })
+  @OneToMany(() => Image, (image) => image.post, { nullable: true, lazy: true })
   @Field(() => Image, { nullable: true })
   images: Image[];
 
-  @OneToOne(() => Session, (session) => session.post)
+  @OneToOne(() => Session, (session) => session.post, { lazy: true })
   @JoinColumn()
   @Field(() => Session)
   session: Session;

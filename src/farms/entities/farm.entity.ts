@@ -3,7 +3,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -25,7 +24,7 @@ export class Farm {
 
   @Column('text')
   @Field(() => String)
-  title: string;
+  name: string;
 
   @Column({
     type: 'text',

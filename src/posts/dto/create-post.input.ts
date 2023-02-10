@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsUUID,
   Max,
   MaxLength,
   Min,
@@ -27,4 +28,8 @@ export class CreatePostInput {
   @IsNotEmpty()
   @MaxLength(100)
   description: string;
+
+  @Field(() => String)
+  @IsUUID()
+  sessionId: string;
 }

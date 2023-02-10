@@ -19,9 +19,13 @@ export class Session {
   @Field(() => ID)
   id: string;
 
-  @Column('timestamp')
+  @Column({ type: 'timestamp', name: 'date_created' })
   @Field(() => Date)
-  date: Date;
+  dateCreated: Date;
+
+  @Column({ type: 'timestamp', name: 'date_reserved' })
+  @Field(() => Date)
+  dateReserved: Date;
 
   @Column({ type: 'text', name: 'type_session' })
   @Field(() => ValidTypeSsesion)
@@ -43,11 +47,11 @@ export class Session {
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Farm, (farm) => farm.sessions)
+  @ManyToOne(() => Farm, (farm) => farm.sessions, { lazy: true })
   @Field(() => Farm)
   farm: Farm;
 
-  @OneToOne(() => Post, (post) => post.session)
+  @OneToOne(() => Post, (post) => post.session, { lazy: true })
   @JoinColumn()
   @Field(() => Post)
   post: Post;

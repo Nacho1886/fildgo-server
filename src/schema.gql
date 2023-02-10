@@ -149,8 +149,8 @@ enum ValidRoles {
 type Query {
   users: [User!]!
   user(id: Int!): User!
-  items: [Item!]!
-  item(id: Int!): Item!
+  items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
+  item(id: ID!): Item!
   posts: [Post!]!
   post(id: Int!): Post!
   images: [Image!]!
@@ -167,7 +167,7 @@ type Mutation {
   removeUser(id: Int!): User!
   createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!): Item!
-  removeItem(id: Int!): Item!
+  removeItem(id: ID!): Item!
   createPost(createPostInput: CreatePostInput!): Post!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   removePost(id: Int!): Post!
@@ -219,32 +219,44 @@ input CreatePostInput {
   stars: Float!
   title: String!
   description: String!
+  sessionId: String!
 }
 
 input UpdatePostInput {
   stars: Float
   title: String
   description: String
+  sessionId: String
   id: Int!
 }
 
 input CreateImageInput {
   url: String!
+  itemId: String!
+  farmId: String!
+  postId: String!
 }
 
 input UpdateImageInput {
   url: String
+  itemId: String
+  farmId: String
+  postId: String
   id: Int!
 }
 
 input CreateSessionInput {
   typeSession: ValidTypeSsesion!
   reservedQuantity: Float!
+  farmId: ID!
+  itemId: ID!
 }
 
 input UpdateSessionInput {
   typeSession: ValidTypeSsesion
   reservedQuantity: Float
+  farmId: ID
+  itemId: ID
   id: Int!
 }
 

@@ -30,23 +30,23 @@ export class Image {
   @Field(() => Date)
   updatedAt: Date;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { lazy: true })
   @JoinColumn({ name: 'user_updater' })
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Item, (item) => item.images, { nullable: true })
+  @ManyToOne(() => Item, (item) => item.images, { nullable: true, lazy: true })
   @JoinColumn()
   @Field(() => Item, { nullable: true })
-  item: Item;
+  item?: Item;
 
-  @ManyToOne(() => Farm, (farm) => farm.images, { nullable: true })
+  @ManyToOne(() => Farm, (farm) => farm.images, { nullable: true, lazy: true })
   @JoinColumn()
   @Field(() => Farm, { nullable: true })
-  farm: Farm;
+  farm?: Farm;
 
-  @ManyToOne(() => Post, (post) => post.images, { nullable: true })
+  @ManyToOne(() => Post, (post) => post.images, { nullable: true, lazy: true })
   @JoinColumn()
   @Field(() => Post, { nullable: true })
-  post: Post;
+  post?: Post;
 }

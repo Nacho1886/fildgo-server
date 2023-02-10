@@ -3,19 +3,26 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { SEED_USERS, SEED_ITEMS, SEED_LISTS } from './data/seed-data';
+import {
+  SEED_USERS,
+  SEED_ITEMS,
+  SEED_FARMS,
+  SEED_IMAGES,
+  SEED_POSTS,
+  SEED_SESSIONS,
+} from './data/seed-data';
 
 import { Item } from './../items/entities/item.entity';
 import { User } from './../users/entities/user.entity';
+import { Farm } from 'src/farms/entities/farm.entity';
+import { Session } from 'src/sessions/entities/session.entity';
+import { Post } from 'src/posts/entities/post.entity';
+import { Image } from 'src/images/entities/image.entity';
 
 import { ItemsService } from '../items/items.service';
 import { UsersService } from './../users/users.service';
-import { Farm } from 'src/farms/entities/farm.entity';
 import { FarmsService } from 'src/farms/farms.service';
-import { Session } from 'src/sessions/entities/session.entity';
 import { SessionsService } from 'src/sessions/sessions.service';
-import { Post } from 'src/posts/entities/post.entity';
-import { Image } from 'src/images/entities/image.entity';
 import { PostsService } from 'src/posts/posts.service';
 import { ImagesService } from 'src/images/images.service';
 
@@ -65,32 +72,38 @@ export class SeedService {
     const user = await this.loadUsers();
 
     // Crear items
-    await this.loadItems(user);
+    const item = await this.loadItems(user);
 
-    // Crear listas
-    const list = await this.loadLists(user);
-
-    // Crear listItems
-    const items = await this.itemsService.findAll(
-      user,
-      { limit: 15, offset: 0 },
-      {},
-    );
-    await this.loadListItems(list, items);
+    // Crear farms
+    const farm = await this.loadFarms(user);
 
     return true;
   }
 
   async deleteDatabase() {
-    // ListItems
-    await this.listItemsRepository
+    // images
+    await this.imagesRepository
       .createQueryBuilder()
       .delete()
       .where({})
       .execute();
 
-    // Lists
-    await this.listsRepository
+    // posts
+    await this.postsRepository
+      .createQueryBuilder()
+      .delete()
+      .where({})
+      .execute();
+
+    // sessions
+    await this.sessionsRepository
+      .createQueryBuilder()
+      .delete()
+      .where({})
+      .execute();
+
+    // farms
+    await this.farmsRepository
       .createQueryBuilder()
       .delete()
       .where({})
@@ -112,7 +125,7 @@ export class SeedService {
   }
 
   async loadUsers(): Promise<User> {
-    const users = [];
+    const users: User[] = [];
 
     for (const user of SEED_USERS) {
       users.push(await this.usersService.create(user));
@@ -121,34 +134,33 @@ export class SeedService {
     return users[0];
   }
 
-  async loadItems(user: User): Promise<void> {
-    const itemsPromises = [];
+  async loadItems(user: User): Promise<Item> {
+    const items: Item[] = [];
 
     for (const item of SEED_ITEMS) {
-      itemsPromises.push(this.itemsService.create(item, user));
+      items.push(await this.itemsService.create(item, user));
     }
 
-    await Promise.all(itemsPromises);
+    return items[0];
   }
 
-  async loadLists(user: User): Promise<List> {
-    const lists = [];
+  async loadFarms(user: User): Promise<Farm> {
+    const farms: Farm[] = [];
 
-    for (const list of SEED_LISTS) {
-      lists.push(await this.listsService.create(list, user));
+    for (const Farm of SEED_FARMS) {
+      farms.push(await this.farmsService.create(Farm, user));
     }
 
-    return lists[0];
+    return farms[0];
   }
 
-  async loadListItems(list: List, items: Item[]) {
-    for (const item of items) {
-      this.listItemService.create({
-        quantity: Math.round(Math.random() * 10),
-        completed: Math.round(Math.random() * 1) === 0 ? false : true,
-        listId: list.id,
-        itemId: item.id,
-      });
+  async loadSessions(user: User): Promise<Session> {
+    const sessions: Session[] = [];
+
+    for (const Session of SEED_SESSIONS) {
+      sessions.push(await this.sessionsService.create(Session, user));
     }
+
+    return sessions[0];
   }
 }

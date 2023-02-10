@@ -4,9 +4,7 @@ import { CreateItemInput } from 'src/items/dto/create-item.input';
 import { ValidQuantities, ValidTagItems } from 'src/items/enums';
 import { CreateFarmInput } from 'src/farms/dto/create-farm.input';
 import { ValidTagFarms } from 'src/farms/enums/tag-farm.enum';
-import { CreateSessionInput } from 'src/sessions/dto/create-session.input';
 import { ValidTypeSsesion } from 'src/sessions/enums/type-session.enum';
-import { CreatePostInput } from 'src/posts/dto/create-post.input';
 import { CreateImageInput } from 'src/images/dto/create-image.input';
 
 export const SEED_USERS: CreateUserInput[] = [
@@ -116,35 +114,38 @@ export const SEED_ITEMS: CreateItemInput[] = [
 
 export const SEED_FARMS: CreateFarmInput[] = [
   {
-    title: 'Green Pastures',
+    name: 'Green Pastures',
     tags: [ValidTagFarms.urban, ValidTagFarms.organic],
   },
   {
-    title: 'Granja Pepe',
+    name: 'Granja Pepe',
     tags: [ValidTagFarms.intensive],
   },
   {
-    title: 'Cebollino`s',
+    name: 'Cebollino`s',
     tags: [ValidTagFarms.nomadic],
   },
 ];
 
-export const SEED_SESSIONS: CreateSessionInput[] = [
+export const SEED_SESSIONS = [
   {
     typeSession: ValidTypeSsesion.hours,
     reservedQuantity: 3,
+    dateReserved: new Date(2023, 1, 9, 11, 30, 0, 0),
   },
   {
     typeSession: ValidTypeSsesion.quantity,
     reservedQuantity: 10,
+    dateReserved: new Date(2023, 1, 10, 11, 30, 0, 0),
   },
   {
     typeSession: ValidTypeSsesion.hours,
     reservedQuantity: 2,
+    dateReserved: new Date(2023, 1, 11, 11, 30, 0, 0),
   },
 ];
 
-export const SEED_POSTS: CreatePostInput[] = [
+export const SEED_POSTS = [
   {
     title: 'Bueno',
     description: 'Me encanto la experiencia',

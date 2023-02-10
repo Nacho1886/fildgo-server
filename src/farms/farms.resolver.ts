@@ -1,35 +1,58 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+// import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
+
 import { FarmsService } from './farms.service';
+
 import { Farm } from './entities/farm.entity';
-import { CreateFarmInput } from './dto/create-farm.input';
-import { UpdateFarmInput } from './dto/update-farm.input';
+import { User } from './../users/entities/user.entity';
+
+import { CreateFarmInput, UpdateFarmInput } from './dto';
+import { PaginationArgs, SearchArgs } from './../common/dto/args';
+
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 
 @Resolver(() => Farm)
+// @UseGuards(JwtAuthGuard)
 export class FarmsResolver {
   constructor(private readonly farmsService: FarmsService) {}
 
-  @Mutation(() => Farm)
-  createFarm(@Args('createFarmInput') createFarmInput: CreateFarmInput) {
-    return this.farmsService.create(createFarmInput);
+  @Mutation(() => Farm, { name: 'createFarm' })
+  async createFarm(
+    @Args('createFarmInput') createFarmInput: CreateFarmInput,
+    @CurrentUser() user: User,
+  ): Promise<Farm> {
+    return this.farmsService.create(createFarmInput, user);
   }
 
-  @Query(() => [Farm], { name: 'farms' })
-  findAll() {
-    return this.farmsService.findAll();
+  @Query(() => [Farm], { name: 'Farms' })
+  async findAll(
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ): Promise<Farm[]> {
+    return this.farmsService.findAll(paginationArgs, searchArgs);
   }
 
-  @Query(() => Farm, { name: 'farm' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  @Query(() => Farm, { name: 'Farm' })
+  async findOne(
+    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+  ): Promise<Farm> {
     return this.farmsService.findOne(id);
   }
 
-  @Mutation(() => Farm)
-  updateFarm(@Args('updateFarmInput') updateFarmInput: UpdateFarmInput) {
-    return this.farmsService.update(updateFarmInput.id, updateFarmInput);
+  /* @Mutation(() => Farm)
+  updateFarm(
+    @Args('updateFarmInput') updateFarmInput: UpdateFarmInput,
+    @CurrentUser() user: User,
+  ): Promise<Farm> {
+    return this.farmsService.update(updateFarmInput.id, updateFarmInput, user);
   }
 
   @Mutation(() => Farm)
-  removeFarm(@Args('id', { type: () => Int }) id: number) {
-    return this.farmsService.remove(id);
-  }
+  removeFarm(
+    @Args('id', { type: () => ID }) id: string,
+    @CurrentUser() user: User,
+  ): Promise<Farm> {
+    return this.farmsService.remove(id, user);
+  } */
 }
