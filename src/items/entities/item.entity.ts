@@ -44,6 +44,10 @@ export class Item {
   @Field(() => ValidQuantities)
   quantityUnits: ValidQuantities;
 
+  @Column({ type: 'boolean', name: 'is_active', default: false })
+  @Field(() => Boolean)
+  isActive: boolean;
+
   @Column({ type: 'timestamp', name: 'created_at' })
   @Field(() => Date)
   CreatedAt: Date;
@@ -80,22 +84,26 @@ export class Item {
   farms: Farm[];
 
   @BeforeInsert()
-  checkSlugInsert() {
+  autoDataInsert() {
     this.slug = this.name;
 
     this.slug = this.slug
       .toLowerCase()
       .replaceAll(' ', '_')
       .replaceAll("'", '');
+
+    this.CreatedAt = new Date();
   }
 
   @BeforeUpdate()
-  checkSlugUpdate() {
+  autoDataUpdate() {
     this.slug = this.name;
 
     this.slug = this.slug
       .toLowerCase()
       .replaceAll(' ', '_')
       .replaceAll("'", '');
+
+    this.lastActivity = new Date();
   }
 }

@@ -1,5 +1,6 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -49,4 +50,9 @@ export class Image {
   @JoinColumn()
   @Field(() => Post, { nullable: true })
   post?: Post;
+
+  @BeforeInsert()
+  dateInsert() {
+    this.updatedAt = new Date();
+  }
 }

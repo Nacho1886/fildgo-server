@@ -1,5 +1,7 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -26,21 +28,15 @@ export class Farm {
   @Field(() => String)
   name: string;
 
-  @Column({
-    type: 'text',
-    unique: true,
-  })
+  @Column({ type: 'text', unique: true })
   @Field(() => String)
   slug: string;
 
-  @Column({
-    type: 'text',
-    array: true,
-  })
+  @Column({ type: 'text', array: true })
   @Field(() => [ValidTagFarms])
   tags: ValidTagFarms[];
 
-  @Column('boolean')
+  @Column({ type: 'boolean', name: 'is_active', default: false })
   @Field(() => Boolean)
   isActive: boolean;
 
@@ -57,10 +53,7 @@ export class Farm {
   @Field(() => Date, { nullable: true })
   lastActivity?: Date;
 
-  @ManyToOne(() => User, {
-    nullable: true,
-    lazy: true,
-  })
+  @ManyToOne(() => User, { nullable: true, lazy: true })
   @JoinColumn({ name: 'last_activity_by' })
   @Field(() => User, { nullable: true })
   lastActivityBy?: User;
@@ -82,4 +75,28 @@ export class Farm {
 
   @ManyToMany(() => Item, (item) => item.farms)
   items: Item[];
+
+  @BeforeInsert()
+  autoDataInsert() {
+    this.slug = this.name;
+
+    this.slug = this.slug
+      .toLowerCase()
+      .replaceAll(' ', '_')
+      .replaceAll("'", '');
+
+    this.CreatedAt = new Date();
+  }
+
+  @BeforeUpdate()
+  autoDataUpdate() {
+    this.slug = this.name;
+
+    this.slug = this.slug
+      .toLowerCase()
+      .replaceAll(' ', '_')
+      .replaceAll("'", '');
+
+    this.lastActivity = new Date();
+  }
 }

@@ -8,6 +8,8 @@ import { PaginationArgs, SearchArgs } from './../common/dto/args';
 import { User } from './../users/entities/user.entity';
 import { Item } from './entities/item.entity';
 import { isUUID } from 'class-validator';
+import { paginationConstruct } from 'src/common/functions';
+import { findAllWithSearch } from '../common/functions/find-all-with-search.function';
 
 @Injectable()
 export class ItemsService {
@@ -25,21 +27,16 @@ export class ItemsService {
     paginationArgs: PaginationArgs,
     searchArgs: SearchArgs,
   ): Promise<Item[]> {
-    const { limit, offset } = paginationArgs;
     const { search } = searchArgs;
 
-    const queryBuilder = this.itemsRepository
-      .createQueryBuilder()
-      .take(limit)
-      .skip(offset);
+    const itemBuilder = this.itemsRepository.createQueryBuilder();
 
-    if (search) {
-      queryBuilder.andWhere('LOWER(name) like :name', {
-        name: `%${search.toLowerCase()}%`,
-      });
-    }
+    const itemsPaginate = paginationConstruct(itemBuilder, paginationArgs);
 
-    return queryBuilder.getMany();
+    if (search)
+      return await findAllWithSearch(itemsPaginate, searchArgs).getMany();
+
+    return await itemsPaginate.getMany();
   }
 
   async findOne(term: string): Promise<Item> {

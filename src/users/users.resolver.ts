@@ -27,10 +27,7 @@ import { ValidRoles } from '../auth/enums/valid-roles.enum';
 @Resolver(() => User)
 // @UseGuards(JwtAuthGuard)
 export class UsersResolver {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly itemsService: ItemsService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Query(() => [User], { name: 'users' })
   async findAll(): Promise<User[]> {

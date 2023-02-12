@@ -38,7 +38,7 @@ export class CreateUserInput {
   })
   password: string;
 
-  @Field(() => [ValidRoles])
+  @Field(() => [ValidRoles], { nullable: true })
   @IsOptional()
   roles: ValidRoles[];
 }

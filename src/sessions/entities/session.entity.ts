@@ -1,6 +1,8 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { User } from 'src/users/entities/user.entity';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -21,11 +23,11 @@ export class Session {
 
   @Column({ type: 'timestamp', name: 'date_created' })
   @Field(() => Date)
-  dateCreated: Date;
+  CreatedAt: Date;
 
-  @Column({ type: 'timestamp', name: 'date_reserved' })
+  @Column({ type: 'timestamp', name: 'reserved_date' })
   @Field(() => Date)
-  dateReserved: Date;
+  reservedDate: Date;
 
   @Column({ type: 'text', name: 'type_session' })
   @Field(() => ValidTypeSsesion)
@@ -35,13 +37,22 @@ export class Session {
   @Field(() => Number)
   reservedQuantity: number;
 
-  @Column({ type: 'boolean', name: 'is_active', default: true })
+  @Column({ type: 'boolean', name: 'is_completed', default: false })
   @Field(() => Boolean)
-  isActive: boolean;
+  isCompleted: boolean;
 
-  @Column({ type: 'boolean', name: 'is_canceled', default: true })
+  @Column({ type: 'boolean', name: 'is_canceled', default: false })
   @Field(() => Boolean)
   isCanceled: boolean;
+
+  @Column({ type: 'timestamp', name: 'last_activity', nullable: true })
+  @Field(() => Date, { nullable: true })
+  lastActivity?: Date;
+
+  @ManyToOne(() => User, { nullable: true, lazy: true })
+  @JoinColumn({ name: 'last_activity_by' })
+  @Field(() => User, { nullable: true })
+  lastActivityBy?: User;
 
   @ManyToOne(() => User, (user) => user.farms)
   @Field(() => User)
@@ -55,4 +66,14 @@ export class Session {
   @JoinColumn()
   @Field(() => Post)
   post: Post;
+
+  @BeforeInsert()
+  dateInsert() {
+    this.CreatedAt = new Date();
+  }
+
+  @BeforeUpdate()
+  dateUpdate() {
+    this.lastActivity = new Date();
+  }
 }

@@ -7,6 +7,8 @@ import {
   ManyToOne,
   OneToOne,
   OneToMany,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 
 import { Farm } from 'src/farms/entities/farm.entity';
@@ -34,18 +36,27 @@ export class Post {
   @Field(() => Number)
   stars: number;
 
-  @Column('timestamp')
+  @Column({ type: 'boolean', name: 'is_active', default: true })
+  @Field(() => Boolean)
+  isActive: boolean;
+
+  @Column({ type: 'timestamp', name: 'created_at' })
   @Field(() => Date)
   CreatedAt: Date;
+
+  @Column({ type: 'timestamp', name: 'last_activity', nullable: true })
+  @Field(() => Date, { nullable: true })
+  lastActivity?: Date;
+
+  @ManyToOne(() => User, { nullable: true, lazy: true })
+  @JoinColumn({ name: 'last_activity_by' })
+  @Field(() => User, { nullable: true })
+  lastActivityBy?: User;
 
   @ManyToOne(() => User, (user) => user.posts, { lazy: true })
   @JoinColumn({ name: 'user_creator' })
   @Field(() => User)
   user: User;
-
-  @Column('boolean')
-  @Field(() => Boolean)
-  isActive: boolean;
 
   @ManyToOne(() => Farm, (farm) => farm.posts, { lazy: true })
   @JoinColumn()
@@ -65,4 +76,14 @@ export class Post {
   @JoinColumn()
   @Field(() => Session)
   session: Session;
+
+  @BeforeInsert()
+  dateInsert() {
+    this.CreatedAt = new Date();
+  }
+
+  @BeforeUpdate()
+  dateUpdate() {
+    this.lastActivity = new Date();
+  }
 }

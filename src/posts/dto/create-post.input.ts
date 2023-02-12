@@ -1,4 +1,4 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, ID } from '@nestjs/graphql';
 import {
   IsNotEmpty,
   IsNumber,
@@ -29,7 +29,7 @@ export class CreatePostInput {
   @MaxLength(100)
   description: string;
 
-  @Field(() => String)
+  @Field(() => ID)
   @IsUUID()
   sessionId: string;
 }

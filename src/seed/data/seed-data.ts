@@ -66,38 +66,18 @@ export const SEED_ITEMS: CreateItemInput[] = [
     tag: ValidTagItems.meat,
   },
   {
-    name: 'Chicken breast (skinless,boneless)',
-    quantityUnits: ValidQuantities.unit,
-    tag: ValidTagItems.meat,
-  },
-  {
-    name: 'Chicken thighs (skinless,boneless)',
+    name: 'Chicken salad (made with lower calorie mayo)',
     quantityUnits: ValidQuantities.box,
     tag: ValidTagItems.meat,
   },
   {
-    name: 'Chicken salad (made with lower calorie mayo)',
-    quantityUnits: null,
-    tag: ValidTagItems.meat,
-  },
-  {
     name: 'Tuna salad (made with lower calorie mayo)',
-    quantityUnits: null,
+    quantityUnits: ValidQuantities.box,
     tag: ValidTagItems.meat,
   },
   {
     name: 'Egg salad (made with lower calorie mayo)',
     quantityUnits: ValidQuantities.unit,
-    tag: ValidTagItems.meat,
-  },
-  {
-    name: 'Lean ground beef',
-    quantityUnits: ValidQuantities.pound,
-    tag: ValidTagItems.meat,
-  },
-  {
-    name: 'Ground turkey or chicken',
-    quantityUnits: ValidQuantities.pound,
     tag: ValidTagItems.meat,
   },
   {
@@ -107,7 +87,7 @@ export const SEED_ITEMS: CreateItemInput[] = [
   },
   {
     name: 'Brussels sprouts',
-    quantityUnits: null,
+    quantityUnits: ValidQuantities.Kg,
     tag: ValidTagItems.leafy_green,
   },
 ];
@@ -131,17 +111,17 @@ export const SEED_SESSIONS = [
   {
     typeSession: ValidTypeSsesion.hours,
     reservedQuantity: 3,
-    dateReserved: new Date(2023, 1, 9, 11, 30, 0, 0),
+    reservedDate: new Date(2023, 1, 9, 11, 30, 0, 0),
   },
   {
     typeSession: ValidTypeSsesion.quantity,
     reservedQuantity: 10,
-    dateReserved: new Date(2023, 1, 10, 11, 30, 0, 0),
+    reservedDate: new Date(2023, 1, 10, 11, 30, 0, 0),
   },
   {
     typeSession: ValidTypeSsesion.hours,
     reservedQuantity: 2,
-    dateReserved: new Date(2023, 1, 11, 11, 30, 0, 0),
+    reservedDate: new Date(2023, 1, 11, 11, 30, 0, 0),
   },
 ];
 

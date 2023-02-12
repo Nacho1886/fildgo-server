@@ -8,6 +8,8 @@ import { PaginationArgs, SearchArgs } from './../common/dto/args';
 import { User } from './../users/entities/user.entity';
 import { Farm } from './entities/farm.entity';
 import { isUUID } from 'class-validator';
+import { paginationConstruct } from 'src/common/functions';
+import { findAllWithSearch } from '../common/functions/find-all-with-search.function';
 
 @Injectable()
 export class FarmsService {
@@ -25,21 +27,15 @@ export class FarmsService {
     paginationArgs: PaginationArgs,
     searchArgs: SearchArgs,
   ): Promise<Farm[]> {
-    const { limit, offset } = paginationArgs;
     const { search } = searchArgs;
 
-    const queryBuilder = this.farmsRepository
-      .createQueryBuilder()
-      .take(limit)
-      .skip(offset);
+    const farmBuilder = this.farmsRepository.createQueryBuilder();
 
-    if (search) {
-      queryBuilder.andWhere('LOWER(name) like :name', {
-        name: `%${search.toLowerCase()}%`,
-      });
-    }
+    const farmsPaginate = paginationConstruct(farmBuilder, paginationArgs);
 
-    return queryBuilder.getMany();
+    if (search) await findAllWithSearch(farmsPaginate, searchArgs).getMany();
+
+    return await farmsPaginate.getMany();
   }
 
   async findOne(term: string): Promise<Farm> {

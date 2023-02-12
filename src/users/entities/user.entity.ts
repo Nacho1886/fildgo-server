@@ -6,6 +6,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   JoinColumn,
+  BeforeInsert,
+  BeforeUpdate,
 } from 'typeorm';
 
 import { ValidRoles } from '../../auth/enums/valid-roles.enum';
@@ -50,23 +52,15 @@ export class User {
   @Field(() => Date)
   CreatedAt: Date;
 
-  @Column({ type: 'timestamp', name: 'last_activity' })
-  @Field(() => Date)
-  lastActivity: Date;
+  @Column({ type: 'timestamp', name: 'last_activity', nullable: true })
+  @Field(() => Date, { nullable: true })
+  lastActivity?: Date;
 
-  @Column({
-    type: 'text',
-    array: true,
-    default: [ValidRoles.user],
-  })
+  @Column({ type: 'text', array: true, default: [ValidRoles.user] })
   @Field(() => [ValidRoles])
   roles: ValidRoles[];
 
-  @Column({
-    type: 'boolean',
-    name: 'is_active',
-    default: true,
-  })
+  @Column({ type: 'boolean', name: 'is_active', default: true })
   @Field(() => Boolean)
   isActive: boolean;
 
@@ -95,5 +89,13 @@ export class User {
   @Field(() => [Session])
   sessions: Session[];
 
-  // Location
+  @BeforeInsert()
+  dateInsert() {
+    this.CreatedAt = new Date();
+  }
+
+  @BeforeUpdate()
+  dateUpdate() {
+    this.lastActivity = new Date();
+  }
 }

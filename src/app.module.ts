@@ -14,6 +14,7 @@ import { ImagesModule } from './images/images.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { AuthModule } from './auth/auth.module';
 import { FarmsModule } from './farms/farms.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -71,6 +72,8 @@ import { FarmsModule } from './farms/farms.module';
     AuthModule,
 
     FarmsModule,
+
+    SeedModule,
   ],
 })
 export class AppModule {}

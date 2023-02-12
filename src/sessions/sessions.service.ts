@@ -8,6 +8,8 @@ import { PaginationArgs, SearchArgs } from './../common/dto/args';
 import { User } from './../users/entities/user.entity';
 import { Session } from './entities/Session.entity';
 import { Farm } from 'src/farms/entities/farm.entity';
+import { findAllWithSearch, paginationConstruct } from 'src/common/functions';
+import { searchByParentId } from '../common/functions/search-by-parent-id.function';
 
 @Injectable()
 export class SessionsService {
@@ -27,45 +29,36 @@ export class SessionsService {
     return await this.sessionsRepository.save(newSession);
   }
 
-  async findAllByUser(
-    user: User,
+  async findAll(
+    parent,
     paginationArgs: PaginationArgs,
     searchArgs: SearchArgs,
   ): Promise<Session[]> {
     const { search } = searchArgs;
 
-    const sessionsQueryBuilder = this.findAllConstruction(paginationArgs);
-    sessionsQueryBuilder.where(`"userId" = :userId`, { userId: user.id });
+    const sessionBuilder = this.sessionsRepository.createQueryBuilder();
+
+    const sessionsPaginate = paginationConstruct(
+      sessionBuilder,
+      paginationArgs,
+    );
+
+    const sessionWithParent = searchByParentId(sessionsPaginate, parent);
 
     if (search)
-      return this.findAllWithSearch(sessionsQueryBuilder, searchArgs).getMany();
+      return findAllWithSearch(sessionWithParent, searchArgs).getMany();
 
-    return sessionsQueryBuilder.getMany();
+    return await sessionWithParent.getMany();
   }
 
-  async findAllByFarm(
-    farm: Farm,
-    paginationArgs: PaginationArgs,
-    searchArgs: SearchArgs,
-  ): Promise<Session[]> {
-    const { search } = searchArgs;
+  async findOne(id: string, parent): Promise<Session> {
+    const sessionBuilder = this.sessionsRepository.createQueryBuilder();
+    const session = searchByParentId(sessionBuilder, parent);
 
-    const sessionsQueryBuilder = this.findAllConstruction(paginationArgs);
-    sessionsQueryBuilder.where(`"farmId" = :farmId`, { farmId: farm.id });
-
-    if (search)
-      return this.findAllWithSearch(sessionsQueryBuilder, searchArgs).getMany();
-
-    return sessionsQueryBuilder.getMany();
-  }
-
-  async findOne(id: string): Promise<Session> {
-    const Session = await this.sessionsRepository.findOneBy({ id });
-
-    if (!Session)
+    if (!session)
       throw new NotFoundException(`Session with id: ${id} not found`);
 
-    return Session;
+    return session.getOne();
   }
 
   /* async update(
@@ -98,26 +91,4 @@ export class SessionsService {
       },
     });
   } */
-
-  findAllConstruction(
-    paginationArgs: PaginationArgs,
-  ): SelectQueryBuilder<Session> {
-    const { limit, offset } = paginationArgs;
-
-    return this.sessionsRepository
-      .createQueryBuilder()
-      .take(limit)
-      .skip(offset);
-  }
-
-  findAllWithSearch(
-    sessionBuilder: SelectQueryBuilder<Session>,
-    searchArgs: SearchArgs,
-  ): SelectQueryBuilder<Session> {
-    const { search } = searchArgs;
-
-    return sessionBuilder.andWhere('LOWER(name) like :name', {
-      name: `%${search.toLowerCase()}%`,
-    });
-  }
 }

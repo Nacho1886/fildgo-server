@@ -7,7 +7,7 @@ import { ValidTypeSsesion } from '../enums/type-session.enum';
 export class CreateSessionInput {
   @Field(() => Date)
   @IsDate()
-  dateReserved: Date;
+  reservedDate: Date;
 
   @Field(() => ValidTypeSsesion)
   @IsNotEmpty()

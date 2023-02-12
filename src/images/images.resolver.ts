@@ -8,7 +8,7 @@ import { UpdateImageInput } from './dto/update-image.input';
 export class ImagesResolver {
   constructor(private readonly imagesService: ImagesService) {}
 
-  @Mutation(() => Image)
+  /* @Mutation(() => Image)
   createImage(@Args('createImageInput') createImageInput: CreateImageInput) {
     return this.imagesService.create(createImageInput);
   }
@@ -31,5 +31,5 @@ export class ImagesResolver {
   @Mutation(() => Image)
   removeImage(@Args('id', { type: () => Int }) id: number) {
     return this.imagesService.remove(id);
-  }
+  } */
 }

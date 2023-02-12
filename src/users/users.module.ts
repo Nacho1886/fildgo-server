@@ -8,5 +8,6 @@ import { User, FollowUp } from './entities';
 @Module({
   providers: [UsersResolver, UsersService],
   imports: [TypeOrmModule.forFeature([User, FollowUp])],
+  exports: [TypeOrmModule, UsersService],
 })
 export class UsersModule {}

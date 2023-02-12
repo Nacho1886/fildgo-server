@@ -1,5 +1,5 @@
 import { ParseUUIDPipe, UseGuards } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, Parent } from '@nestjs/graphql';
 // import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 
 import { SessionsService } from './sessions.service';
@@ -27,17 +27,19 @@ export class SessionsResolver {
 
   @Query(() => [Session], { name: 'Sessions' })
   async findAll(
+    @Parent() parent,
     @Args() paginationArgs: PaginationArgs,
     @Args() searchArgs: SearchArgs,
   ): Promise<Session[]> {
-    return this.SessionsService.findAll(paginationArgs, searchArgs);
+    return this.SessionsService.findAll(parent, paginationArgs, searchArgs);
   }
 
   @Query(() => Session, { name: 'Session' })
   async findOne(
+    @Parent() parent,
     @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
   ): Promise<Session> {
-    return this.SessionsService.findOne(id);
+    return this.SessionsService.findOne(id, parent);
   }
 
   /* @Mutation(() => Session)

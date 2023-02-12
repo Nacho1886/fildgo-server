@@ -1,4 +1,4 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, ID } from '@nestjs/graphql';
 import { IsString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 @InputType()
@@ -8,17 +8,17 @@ export class CreateImageInput {
   @IsNotEmpty()
   url: string;
 
-  @Field(() => String)
+  @Field(() => ID, { nullable: true })
   @IsOptional()
   @IsUUID()
   itemId?: string;
 
-  @Field(() => String)
+  @Field(() => ID, { nullable: true })
   @IsOptional()
   @IsUUID()
   farmId?: string;
 
-  @Field(() => String)
+  @Field(() => ID, { nullable: true })
   @IsOptional()
   @IsUUID()
   postId?: string;

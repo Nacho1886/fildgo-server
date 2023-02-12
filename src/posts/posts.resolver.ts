@@ -8,7 +8,7 @@ import { UpdatePostInput } from './dto/update-post.input';
 export class PostsResolver {
   constructor(private readonly postsService: PostsService) {}
 
-  @Mutation(() => Post)
+  /* @Mutation(() => Post)
   createPost(@Args('createPostInput') createPostInput: CreatePostInput) {
     return this.postsService.create(createPostInput);
   }
@@ -31,5 +31,5 @@ export class PostsResolver {
   @Mutation(() => Post)
   removePost(@Args('id', { type: () => Int }) id: number) {
     return this.postsService.remove(id);
-  }
+  } */
 }

@@ -4,11 +4,14 @@
 
 type Session {
   id: ID!
-  date: DateTime!
+  CreatedAt: DateTime!
+  reservedDate: DateTime!
   typeSession: ValidTypeSsesion!
   reservedQuantity: Float!
-  isActive: Boolean!
+  isCompleted: Boolean!
   isCanceled: Boolean!
+  lastActivity: DateTime
+  lastActivityBy: User
   user: User!
   farm: Farm!
   post: Post!
@@ -40,9 +43,11 @@ type Post {
   title: String!
   description: String!
   stars: Float!
-  CreatedAt: DateTime!
-  user: User!
   isActive: Boolean!
+  CreatedAt: DateTime!
+  lastActivity: DateTime
+  lastActivityBy: User
+  user: User!
   farm: Farm!
   item: Item!
   images: Image
@@ -51,7 +56,7 @@ type Post {
 
 type Farm {
   id: ID!
-  title: String!
+  name: String!
   slug: String!
   tags: [ValidTagFarms!]!
   isActive: Boolean!
@@ -82,6 +87,7 @@ type Item {
   slug: String!
   tag: ValidTagItems!
   quantityUnits: ValidUnities!
+  isActive: Boolean!
   CreatedAt: DateTime!
   posts: [Post!]!
   images: [Image!]!
@@ -128,7 +134,7 @@ type User {
   username: String!
   email: String!
   CreatedAt: DateTime!
-  lastActivity: DateTime!
+  lastActivity: DateTime
   roles: [ValidRoles!]!
   isActive: Boolean!
   userChangedBy: User
@@ -148,58 +154,22 @@ enum ValidRoles {
 
 type Query {
   users: [User!]!
-  user(id: Int!): User!
+  user(id: ID!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(id: ID!): Item!
-  posts: [Post!]!
-  post(id: Int!): Post!
-  images: [Image!]!
-  image(id: Int!): Image!
-  sessions: [Session!]!
-  session(id: Int!): Session!
-  farms: [Farm!]!
-  farm(id: Int!): Farm!
+  Sessions(offset: Int = 0, limit: Int = 10, search: String): [Session!]!
+  Session(id: ID!): Session!
+  Farms(offset: Int = 0, limit: Int = 10, search: String): [Farm!]!
+  Farm(id: ID!): Farm!
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
   createItem(createItemInput: CreateItemInput!): Item!
-  updateItem(updateItemInput: UpdateItemInput!): Item!
-  removeItem(id: ID!): Item!
-  createPost(createPostInput: CreatePostInput!): Post!
-  updatePost(updatePostInput: UpdatePostInput!): Post!
-  removePost(id: Int!): Post!
-  createImage(createImageInput: CreateImageInput!): Image!
-  updateImage(updateImageInput: UpdateImageInput!): Image!
-  removeImage(id: Int!): Image!
   createSession(createSessionInput: CreateSessionInput!): Session!
-  updateSession(updateSessionInput: UpdateSessionInput!): Session!
-  removeSession(id: Int!): Session!
   createFarm(createFarmInput: CreateFarmInput!): Farm!
-  updateFarm(updateFarmInput: UpdateFarmInput!): Farm!
-  removeFarm(id: Int!): Farm!
-}
 
-input CreateUserInput {
-  email: String!
-  name: String!
-  lastname: String!
-  username: String!
-  password: String!
-  roles: [ValidRoles!]!
-}
-
-input UpdateUserInput {
-  email: String
-  name: String
-  lastname: String
-  username: String
-  password: String
-  roles: [ValidRoles!]
-  id: ID!
-  isActive: Boolean
+  """Ejecuta la construcción de la base de datos"""
+  executeSeed: Boolean!
 }
 
 input CreateItemInput {
@@ -208,65 +178,15 @@ input CreateItemInput {
   quantityUnits: ValidUnities!
 }
 
-input UpdateItemInput {
-  name: String
-  tag: ValidTagItems
-  quantityUnits: ValidUnities
-  id: Int!
-}
-
-input CreatePostInput {
-  stars: Float!
-  title: String!
-  description: String!
-  sessionId: String!
-}
-
-input UpdatePostInput {
-  stars: Float
-  title: String
-  description: String
-  sessionId: String
-  id: Int!
-}
-
-input CreateImageInput {
-  url: String!
-  itemId: String!
-  farmId: String!
-  postId: String!
-}
-
-input UpdateImageInput {
-  url: String
-  itemId: String
-  farmId: String
-  postId: String
-  id: Int!
-}
-
 input CreateSessionInput {
+  reservedDate: DateTime!
   typeSession: ValidTypeSsesion!
   reservedQuantity: Float!
   farmId: ID!
   itemId: ID!
 }
 
-input UpdateSessionInput {
-  typeSession: ValidTypeSsesion
-  reservedQuantity: Float
-  farmId: ID
-  itemId: ID
-  id: Int!
-}
-
 input CreateFarmInput {
-  title: String!
+  name: String!
   tags: [ValidTagFarms!]!
-}
-
-input UpdateFarmInput {
-  title: String
-  tags: [ValidTagFarms!]
-  id: Int!
 }
