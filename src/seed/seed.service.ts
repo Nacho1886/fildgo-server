@@ -194,6 +194,7 @@ export class SeedService {
 
     if (parent instanceof Farm) parentId = { farmId: parent.id };
     if (parent instanceof Item) parentId = { itemId: parent.id };
+    if (parent instanceof Session) parentId = { sessionId: parent.id };
     if (parent instanceof Post) parentId = { postId: parent.id };
 
     for (const image of SEED_IMAGES) {
