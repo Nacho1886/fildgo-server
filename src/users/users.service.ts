@@ -1,3 +1,6 @@
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { isEmail, isUUID } from 'class-validator';
 import {
   BadRequestException,
   Injectable,
@@ -9,13 +12,7 @@ import * as bcrypt from 'bcrypt';
 
 import { User } from './entities/user.entity';
 
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
-import { ValidRoles } from './../auth/enums/valid-roles.enum';
-
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { isUUID } from 'class-validator';
+import { CreateUserInput } from './dto/inputs';
 
 @Injectable()
 export class UsersService {
@@ -28,10 +25,9 @@ export class UsersService {
 
   async create(signupInput: CreateUserInput): Promise<User> {
     try {
-      const newUser = this.usersRepository.create({
-        ...signupInput,
-        password: bcrypt.hashSync(signupInput.password, 10),
-      });
+      signupInput.password = bcrypt.hashSync(signupInput.password, 10);
+
+      const newUser = this.usersRepository.create({ ...signupInput });
 
       return await this.usersRepository.save(newUser);
     } catch (error) {
@@ -45,9 +41,13 @@ export class UsersService {
 
   async findOne(term: string): Promise<User> {
     try {
-      return isUUID(term)
-        ? await this.usersRepository.findOneByOrFail({ id: term })
-        : await this.usersRepository.findOneByOrFail({ email: term });
+      if (isUUID(term))
+        return await this.usersRepository.findOneByOrFail({ id: term });
+
+      if (isEmail(term))
+        return await this.usersRepository.findOneByOrFail({ email: term });
+
+      return await this.usersRepository.findOneByOrFail({ username: term });
     } catch (error) {
       throw new NotFoundException(`${term} not found`);
     }

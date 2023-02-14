@@ -1,5 +1,5 @@
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum';
-import { CreateUserInput } from '../../users/dto/create-user.input';
+import { CreateUserInput } from '../../users/dto/inputs';
 import { CreateItemInput } from 'src/items/dto/create-item.input';
 import { ValidQuantities, ValidTagItems } from 'src/items/enums';
 import { CreateFarmInput } from 'src/farms/dto/create-farm.input';
@@ -98,7 +98,7 @@ export const SEED_FARMS: CreateFarmInput[] = [
     tags: [ValidTagFarms.urban, ValidTagFarms.organic],
   },
   {
-    name: 'Granja Pepe',
+    name: 'Granja Pepéño',
     tags: [ValidTagFarms.intensive],
   },
   {

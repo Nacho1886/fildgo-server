@@ -1,14 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-import { CreateFarmInput, UpdateFarmInput } from './dto';
-import { PaginationArgs, SearchArgs } from './../common/dto/args';
+import { isUUID } from 'class-validator';
 
 import { User } from './../users/entities/user.entity';
 import { Farm } from './entities/farm.entity';
-import { isUUID } from 'class-validator';
-import { paginationConstruct } from 'src/common/functions';
+
+import { CreateFarmInput, UpdateFarmInput } from './dto';
+import { PaginationArgs, SearchArgs } from './../common/dto/args';
+import {
+  createRepositoryByParentId,
+  paginationConstruct,
+} from 'src/common/functions';
 import { findAllWithSearch } from '../common/functions/find-all-with-search.function';
 
 @Injectable()
@@ -19,7 +22,11 @@ export class FarmsService {
   ) {}
 
   async create(createFarmInput: CreateFarmInput, user: User): Promise<Farm> {
-    const newFarm = this.farmsRepository.create({ ...createFarmInput, user });
+    const newFarm = createRepositoryByParentId(
+      this.farmsRepository,
+      createFarmInput,
+      user,
+    );
     return await this.farmsRepository.save(newFarm);
   }
 
@@ -33,7 +40,8 @@ export class FarmsService {
 
     const farmsPaginate = paginationConstruct(farmBuilder, paginationArgs);
 
-    if (search) await findAllWithSearch(farmsPaginate, searchArgs).getMany();
+    if (search)
+      return await findAllWithSearch(farmsPaginate, searchArgs).getMany();
 
     return await farmsPaginate.getMany();
   }

@@ -62,10 +62,8 @@ export class Session {
   @Field(() => Farm)
   farm: Farm;
 
-  @OneToOne(() => Post, (post) => post.session, { lazy: true })
-  @JoinColumn()
-  @Field(() => Post)
-  post: Post;
+  @OneToOne(() => Post, (post) => post.session, { nullable: true })
+  post?: Post;
 
   @BeforeInsert()
   dateInsert() {

@@ -31,6 +31,10 @@ export class SessionsResolver {
     @Args() paginationArgs: PaginationArgs,
     @Args() searchArgs: SearchArgs,
   ): Promise<Session[]> {
+    console.log(
+      '🚀 ~ file: sessions.resolver.ts:34 ~ SessionsResolver ~ parent',
+      parent,
+    );
     return this.SessionsService.findAll(parent, paginationArgs, searchArgs);
   }
 

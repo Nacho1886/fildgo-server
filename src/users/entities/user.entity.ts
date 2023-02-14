@@ -31,17 +31,11 @@ export class User {
   @Field(() => String)
   lastname: string;
 
-  @Column({
-    type: 'text',
-    unique: true,
-  })
+  @Column({ type: 'text', unique: true })
   @Field(() => String)
   username: string;
 
-  @Column({
-    type: 'text',
-    unique: true,
-  })
+  @Column({ type: 'text', unique: true })
   @Field(() => String)
   email: string;
 

@@ -5,6 +5,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -58,23 +59,30 @@ export class Farm {
   @Field(() => User, { nullable: true })
   lastActivityBy?: User;
 
-  @OneToMany(() => Post, (post) => post.farm)
+  @OneToMany(() => Image, (image) => image.farm, { nullable: true })
   @JoinColumn()
-  @Field(() => [Post])
-  posts: Post[];
+  @Field(() => [Image], { nullable: true })
+  images?: Image[];
 
-  @OneToMany(() => Image, (image) => image.farm)
+  @OneToMany(() => Session, (session) => session.farm, {
+    nullable: true,
+    lazy: true,
+  })
   @JoinColumn()
-  @Field(() => [Image])
-  images: Image[];
+  @Field(() => [Session], { nullable: true })
+  sessions?: Session[];
 
-  @OneToMany(() => Session, (session) => session.farm)
-  @JoinColumn()
-  @Field(() => [Session])
-  sessions: Session[];
-
-  @ManyToMany(() => Item, (item) => item.farms)
-  items: Item[];
+  @ManyToMany(() => Item, (item) => item.farms, { nullable: true })
+  @JoinTable({
+    name: 'farms_items',
+    joinColumn: {
+      name: 'farm_id',
+    },
+    inverseJoinColumn: {
+      name: 'item_id',
+    },
+  })
+  items?: Item[];
 
   @BeforeInsert()
   autoDataInsert() {
@@ -82,8 +90,8 @@ export class Farm {
 
     this.slug = this.slug
       .toLowerCase()
-      .replaceAll(' ', '_')
-      .replaceAll("'", '');
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f\s'".ñç]/g, '');
 
     this.CreatedAt = new Date();
   }

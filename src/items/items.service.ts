@@ -1,14 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-
-import { CreateItemInput, UpdateItemInput } from './dto';
-import { PaginationArgs, SearchArgs } from './../common/dto/args';
+import { isUUID } from 'class-validator';
 
 import { User } from './../users/entities/user.entity';
 import { Item } from './entities/item.entity';
-import { isUUID } from 'class-validator';
-import { paginationConstruct } from 'src/common/functions';
+
+import { CreateItemInput, UpdateItemInput } from './dto';
+import { PaginationArgs, SearchArgs } from './../common/dto/args';
+import {
+  createRepositoryByParentId,
+  paginationConstruct,
+} from 'src/common/functions';
 import { findAllWithSearch } from '../common/functions/find-all-with-search.function';
 
 @Injectable()
@@ -19,7 +22,11 @@ export class ItemsService {
   ) {}
 
   async create(createItemInput: CreateItemInput, user: User): Promise<Item> {
-    const newItem = this.itemsRepository.create({ ...createItemInput, user });
+    const newItem = createRepositoryByParentId(
+      this.itemsRepository,
+      createItemInput,
+      user,
+    );
     return await this.itemsRepository.save(newItem);
   }
 

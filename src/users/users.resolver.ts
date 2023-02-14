@@ -16,7 +16,7 @@ import { ItemsService } from '../items/items.service';
 import { Item } from './../items/entities/item.entity';
 import { User } from './entities/user.entity';
 
-import { UpdateUserInput } from './dto/update-user.input';
+import { UpdateUserInput } from './dto/inputs/update-user.input';
 import { ValidRolesArgs } from './dto/args/roles.arg';
 import { PaginationArgs, SearchArgs } from './../common/dto/args';
 
@@ -35,10 +35,8 @@ export class UsersResolver {
   }
 
   @Query(() => User, { name: 'user' })
-  findOne(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
-  ): Promise<User> {
-    return this.usersService.findOne(id);
+  findOne(@Args('term', { type: () => String }) term: string): Promise<User> {
+    return this.usersService.findOne(term);
   }
 
   /*   @Mutation(() => User, { name: 'updateUser' })

@@ -35,9 +35,9 @@ export class FarmsResolver {
 
   @Query(() => Farm, { name: 'Farm' })
   async findOne(
-    @Args('id', { type: () => ID }, ParseUUIDPipe) id: string,
+    @Args('term', { type: () => String }) term: string,
   ): Promise<Farm> {
-    return this.farmsService.findOne(id);
+    return this.farmsService.findOne(term);
   }
 
   /* @Mutation(() => Farm)

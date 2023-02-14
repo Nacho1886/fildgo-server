@@ -40,7 +40,8 @@ export class ImagesService {
 
     const ImageWithParent = searchByParentId(ImagesPaginate, parent);
 
-    if (search) return findAllWithSearch(ImageWithParent, searchArgs).getMany();
+    if (search)
+      return await findAllWithSearch(ImageWithParent, searchArgs).getMany();
 
     return await ImageWithParent.getMany();
   }
@@ -51,7 +52,7 @@ export class ImagesService {
 
     if (!Image) throw new NotFoundException(`Image with id: ${id} not found`);
 
-    return Image.getOne();
+    return await Image.getOne();
   }
 
   /* async update(

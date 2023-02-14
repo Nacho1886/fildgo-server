@@ -58,24 +58,14 @@ export class Post {
   @Field(() => User)
   user: User;
 
-  @ManyToOne(() => Farm, (farm) => farm.posts, { lazy: true })
-  @JoinColumn()
-  @Field(() => Farm)
-  farm: Farm;
-
-  @ManyToOne(() => Item, (item) => item.posts, { lazy: true })
-  @JoinColumn()
-  @Field(() => Item)
-  item: Item;
-
-  @OneToMany(() => Image, (image) => image.post, { nullable: true, lazy: true })
-  @Field(() => Image, { nullable: true })
-  images: Image[];
-
   @OneToOne(() => Session, (session) => session.post, { lazy: true })
   @JoinColumn()
   @Field(() => Session)
   session: Session;
+
+  @OneToMany(() => Image, (image) => image.post, { nullable: true, lazy: true })
+  @Field(() => Image, { nullable: true })
+  images?: Image[];
 
   @BeforeInsert()
   dateInsert() {

@@ -77,9 +77,9 @@ export class SeedService {
     // Crear farms
     const farm = await this.loadFarms(user);
 
-    const session = await this.loadSessions(user, item, farm);
+    const sessions = await this.loadSessions(user, item, farm);
 
-    const post = await this.loadPosts(user, session);
+    const post = await this.loadPosts(user, sessions);
 
     await this.loadImages(user, post);
 
@@ -160,7 +160,7 @@ export class SeedService {
     return farms[0];
   }
 
-  async loadSessions(user: User, item: Item, farm: Farm): Promise<Session> {
+  async loadSessions(user: User, item: Item, farm: Farm): Promise<Session[]> {
     const sessions: Session[] = [];
 
     for (const session of SEED_SESSIONS) {
@@ -172,21 +172,20 @@ export class SeedService {
       sessions.push(await this.sessionsService.create(sessionInput, user));
     }
 
-    return sessions[0];
+    return sessions;
   }
 
-  async loadPosts(user: User, session: Session): Promise<Post> {
-    const posts: Post[] = [];
+  async loadPosts(user: User, sessions: Session[]): Promise<Post> {
+    const postInputs = SEED_POSTS.map((post, i) => ({
+      sessionId: sessions[i].id,
+      ...post,
+    }));
 
-    for (const post of SEED_POSTS) {
-      const postInput = {
-        sessionId: session.id,
-        ...post,
-      };
-      posts.push(await this.postsService.create(postInput, user));
-    }
+    const createdPosts = await Promise.all(
+      postInputs.map((postInput) => this.postsService.create(postInput, user)),
+    );
 
-    return posts[0];
+    return createdPosts[0];
   }
 
   async loadImages(user: User, parent): Promise<void> {
@@ -202,6 +201,7 @@ export class SeedService {
         ...parentId,
         ...image,
       };
+
       await this.imagesService.create(imageInput, user);
     }
   }

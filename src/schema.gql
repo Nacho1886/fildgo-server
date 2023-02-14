@@ -14,7 +14,6 @@ type Session {
   lastActivityBy: User
   user: User!
   farm: Farm!
-  post: Post!
 }
 
 """
@@ -28,16 +27,6 @@ enum ValidTypeSsesion {
   quantity
 }
 
-type Image {
-  id: ID!
-  url: String!
-  updatedAt: DateTime!
-  user: User!
-  item: Item
-  farm: Farm
-  post: Post
-}
-
 type Post {
   id: ID!
   title: String!
@@ -48,10 +37,18 @@ type Post {
   lastActivity: DateTime
   lastActivityBy: User
   user: User!
-  farm: Farm!
-  item: Item!
-  images: Image
   session: Session!
+  images: Image
+}
+
+type Image {
+  id: ID!
+  url: String!
+  updatedAt: DateTime!
+  user: User!
+  item: Item
+  farm: Farm
+  post: Post
 }
 
 type Farm {
@@ -64,9 +61,8 @@ type Farm {
   user: User!
   lastActivity: DateTime
   lastActivityBy: User
-  posts: [Post!]!
-  images: [Image!]!
-  sessions: [Session!]!
+  images: [Image!]
+  sessions: [Session!]
 }
 
 """Different types of tags for a farms."""
@@ -89,9 +85,8 @@ type Item {
   quantityUnits: ValidUnities!
   isActive: Boolean!
   CreatedAt: DateTime!
-  posts: [Post!]!
-  images: [Image!]!
   user: User!
+  images: [Image!]
   lastActivity: DateTime
   lastActivityBy: User
 }
@@ -154,13 +149,13 @@ enum ValidRoles {
 
 type Query {
   users: [User!]!
-  user(id: ID!): User!
+  user(term: String!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
-  item(id: ID!): Item!
+  item(term: String!): Item!
   Sessions(offset: Int = 0, limit: Int = 10, search: String): [Session!]!
   Session(id: ID!): Session!
   Farms(offset: Int = 0, limit: Int = 10, search: String): [Farm!]!
-  Farm(id: ID!): Farm!
+  Farm(term: String!): Farm!
 }
 
 type Mutation {

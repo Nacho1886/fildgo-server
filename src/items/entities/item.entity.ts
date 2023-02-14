@@ -5,7 +5,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -15,7 +14,6 @@ import {
 import { ValidTagItems, ValidQuantities } from '../enums';
 import { User } from '../../users/entities/user.entity';
 import { Farm } from '../../farms/entities/farm.entity';
-import { Post } from 'src/posts/entities/post.entity';
 import { Image } from 'src/images/entities/image.entity';
 
 @Entity({ name: 'items' })
@@ -52,36 +50,27 @@ export class Item {
   @Field(() => Date)
   CreatedAt: Date;
 
-  @OneToMany(() => Post, (post) => post.item)
-  @JoinColumn()
-  @Field(() => [Post])
-  posts: Post[];
-
-  @OneToMany(() => Image, (image) => image.item)
-  @JoinColumn()
-  @Field(() => [Image])
-  images: Image[];
-
   @ManyToOne(() => User, (user) => user.items)
   @JoinColumn({ name: 'user_creator' })
   @Field(() => User)
   user: User;
 
+  @OneToMany(() => Image, (image) => image.item, { nullable: true })
+  @JoinColumn()
+  @Field(() => [Image], { nullable: true })
+  images?: Image[];
+
   @Column({ type: 'timestamp', name: 'last_activity', nullable: true })
   @Field(() => Date, { nullable: true })
   lastActivity?: Date;
 
-  @ManyToOne(() => User, {
-    nullable: true,
-    lazy: true,
-  })
+  @ManyToOne(() => User, { nullable: true, lazy: true })
   @JoinColumn({ name: 'last_activity_by' })
   @Field(() => User, { nullable: true })
   lastActivityBy?: User;
 
-  @ManyToMany(() => Farm, (farm) => farm.items)
-  @JoinTable()
-  farms: Farm[];
+  @ManyToMany(() => Farm, (farm) => farm.items, { nullable: true })
+  farms?: Farm[];
 
   @BeforeInsert()
   autoDataInsert() {

@@ -1,14 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, SelectQueryBuilder } from 'typeorm';
-
-import { CreateSessionInput, UpdateSessionInput } from './dto';
-import { PaginationArgs, SearchArgs } from './../common/dto/args';
+import { Repository } from 'typeorm';
 
 import { User } from './../users/entities/user.entity';
 import { Session } from './entities/Session.entity';
-import { Farm } from 'src/farms/entities/farm.entity';
-import { findAllWithSearch, paginationConstruct } from 'src/common/functions';
+
+import { CreateSessionInput, UpdateSessionInput } from './dto';
+import { PaginationArgs, SearchArgs } from './../common/dto/args';
+import {
+  createRepositoryByParentId,
+  findAllWithSearch,
+  paginationConstruct,
+} from 'src/common/functions';
 import { searchByParentId } from '../common/functions/search-by-parent-id.function';
 
 @Injectable()
@@ -22,10 +25,11 @@ export class SessionsService {
     createSessionInput: CreateSessionInput,
     user: User,
   ): Promise<Session> {
-    const newSession = this.sessionsRepository.create({
-      ...createSessionInput,
+    const newSession = createRepositoryByParentId(
+      this.sessionsRepository,
+      createSessionInput,
       user,
-    });
+    );
     return await this.sessionsRepository.save(newSession);
   }
 
@@ -46,7 +50,7 @@ export class SessionsService {
     const sessionWithParent = searchByParentId(sessionsPaginate, parent);
 
     if (search)
-      return findAllWithSearch(sessionWithParent, searchArgs).getMany();
+      return await findAllWithSearch(sessionWithParent, searchArgs).getMany();
 
     return await sessionWithParent.getMany();
   }
@@ -58,7 +62,7 @@ export class SessionsService {
     if (!session)
       throw new NotFoundException(`Session with id: ${id} not found`);
 
-    return session.getOne();
+    return await session.getOne();
   }
 
   /* async update(
