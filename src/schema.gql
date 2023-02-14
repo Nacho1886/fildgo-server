@@ -147,30 +147,58 @@ enum ValidRoles {
   admin
 }
 
+type FollowUp {
+  id: ID!
+  date: DateTime!
+  follower: User!
+  followedUser: User
+  followedItem: Item
+  followedFarm: Farm
+}
+
+type ItemToFarm {
+  id: ID!
+  date: DateTime!
+  itemId: Item!
+  farmId: Farm!
+}
+
 type Query {
   users: [User!]!
   user(term: String!): User!
   items(offset: Int = 0, limit: Int = 10, search: String): [Item!]!
   item(term: String!): Item!
-  Sessions(offset: Int = 0, limit: Int = 10, search: String): [Session!]!
-  Session(id: ID!): Session!
   Farms(offset: Int = 0, limit: Int = 10, search: String): [Farm!]!
   Farm(term: String!): Farm!
+  Sessions(offset: Int = 0, limit: Int = 10, search: String): [Session!]!
+  Session(id: ID!): Session!
+  followUps: [FollowUp!]!
+  followUp(id: Int!): FollowUp!
+  itemToFarm(id: Int!): ItemToFarm!
 }
 
 type Mutation {
   createItem(createItemInput: CreateItemInput!): Item!
-  createSession(createSessionInput: CreateSessionInput!): Session!
   createFarm(createFarmInput: CreateFarmInput!): Farm!
+  createSession(createSessionInput: CreateSessionInput!): Session!
 
   """Ejecuta la construcción de la base de datos"""
   executeSeed: Boolean!
+  createFollowUp(createFollowUpInput: CreateFollowUpInput!): FollowUp!
+  removeFollowUp(id: Int!): FollowUp!
+  createItemToFarm(createItemInput: CreateItemToFarmInput!): ItemToFarm!
+  removeItemToFarm(id: Int!): ItemToFarm!
 }
 
 input CreateItemInput {
   name: String!
   tag: ValidTagItems!
   quantityUnits: ValidUnities!
+}
+
+input CreateFarmInput {
+  name: String!
+  tags: [ValidTagFarms!]!
 }
 
 input CreateSessionInput {
@@ -181,7 +209,12 @@ input CreateSessionInput {
   itemId: ID!
 }
 
-input CreateFarmInput {
-  name: String!
-  tags: [ValidTagFarms!]!
+input CreateFollowUpInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateItemToFarmInput {
+  itemId: ID!
+  farmId: ID!
 }

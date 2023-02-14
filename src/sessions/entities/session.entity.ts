@@ -55,10 +55,12 @@ export class Session {
   lastActivityBy?: User;
 
   @ManyToOne(() => User, (user) => user.farms)
+  @JoinColumn({ name: 'user_id' })
   @Field(() => User)
   user: User;
 
   @ManyToOne(() => Farm, (farm) => farm.sessions, { lazy: true })
+  @JoinColumn({ name: 'farm_id' })
   @Field(() => Farm)
   farm: Farm;
 

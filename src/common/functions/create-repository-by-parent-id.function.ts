@@ -1,19 +1,21 @@
 import { Repository } from 'typeorm';
 import { ParentIdTypes } from '../enums/parent-id-types.enum';
-import { User } from 'src/users/entities';
+import { User } from 'src/users/entities/user.entity';
 
 export const createRepositoryByParentId = (
   repository: Repository<any>,
-  parent: object,
-  user: User,
+  inputDto: object,
+  user?: User,
 ) => {
   const objectIds = {};
 
   for (const [key, value] of Object.entries(ParentIdTypes)) {
-    if (parent.hasOwnProperty(value)) {
-      objectIds[key] = { id: parent[value] };
-      delete parent[value];
+    if (inputDto.hasOwnProperty(value)) {
+      objectIds[key] = { id: inputDto[value] };
+      delete inputDto[value];
     }
   }
-  return repository.create({ ...parent, ...objectIds, user });
+  return user
+    ? repository.create({ ...inputDto, ...objectIds, user })
+    : repository.create({ ...inputDto, ...objectIds });
 };

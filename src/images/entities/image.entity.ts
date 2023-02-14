@@ -10,7 +10,7 @@ import {
 
 import { Farm } from 'src/farms/entities/farm.entity';
 import { Item } from 'src/items/entities/item.entity';
-import { User } from 'src/users/entities';
+import { User } from 'src/users/entities/user.entity';
 import { Post } from 'src/posts/entities/post.entity';
 
 @Entity({ name: 'images' })
@@ -37,17 +37,17 @@ export class Image {
   user: User;
 
   @ManyToOne(() => Item, (item) => item.images, { nullable: true, lazy: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'item_id' })
   @Field(() => Item, { nullable: true })
   item?: Item;
 
   @ManyToOne(() => Farm, (farm) => farm.images, { nullable: true, lazy: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'farm_id' })
   @Field(() => Farm, { nullable: true })
   farm?: Farm;
 
   @ManyToOne(() => Post, (post) => post.images, { nullable: true, lazy: true })
-  @JoinColumn()
+  @JoinColumn({ name: 'post_id' })
   @Field(() => Post, { nullable: true })
   post?: Post;
 

@@ -1,6 +1,6 @@
 import { Farm } from 'src/farms/entities/farm.entity';
 import { Item } from 'src/items/entities/item.entity';
-import { User } from 'src/users/entities';
+import { User } from 'src/users/entities/user.entity';
 import { SelectQueryBuilder } from 'typeorm';
 
 export const searchByParentId = (
