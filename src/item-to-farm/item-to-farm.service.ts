@@ -30,10 +30,6 @@ export class ItemToFarmService {
       this.ItemToFarmsRepository,
       createItemToFarmInput,
     );
-    console.log(
-      '🚀 ~ file: item-to-farm.service.ts:31 ~ ItemToFarmService ~ create ~ newItemToFarm',
-      newItemToFarm,
-    );
     return await this.ItemToFarmsRepository.save(newItemToFarm);
   }
 

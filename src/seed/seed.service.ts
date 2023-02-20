@@ -25,6 +25,11 @@ import { FarmsService } from 'src/farms/farms.service';
 import { SessionsService } from 'src/sessions/sessions.service';
 import { PostsService } from 'src/posts/posts.service';
 import { ImagesService } from 'src/images/images.service';
+import { ItemToFarm } from 'src/item-to-farm/entities/item-to-farm.entity';
+import { ItemToFarmService } from '../item-to-farm/item-to-farm.service';
+
+import { CreateItemToFarmInput } from 'src/item-to-farm/dto/create-item-to-farm.input';
+import { CreatePostInput } from 'src/posts/dto';
 
 @Injectable()
 export class SeedService {
@@ -50,6 +55,8 @@ export class SeedService {
 
     @InjectRepository(Image)
     private readonly imagesRepository: Repository<Image>,
+    @InjectRepository(ItemToFarm)
+    private readonly itemToFarmsRepository: Repository<ItemToFarm>,
 
     private readonly usersService: UsersService,
     private readonly itemsService: ItemsService,
@@ -57,6 +64,7 @@ export class SeedService {
     private readonly farmsService: FarmsService,
     private readonly postsService: PostsService,
     private readonly imagesService: ImagesService,
+    private readonly itemToFarmService: ItemToFarmService,
   ) {
     this.isProd = configService.get('STATE') === 'prod';
   }
@@ -69,24 +77,31 @@ export class SeedService {
     await this.deleteDatabase();
 
     // Crear usuarios
-    const user = await this.loadUsers();
+    const users = await this.loadUsers();
 
     // Crear items
-    const item = await this.loadItems(user);
+    const items = await this.loadItems(users[0]);
 
     // Crear farms
-    const farm = await this.loadFarms(user);
+    const farms = await this.loadFarms(users[0]);
 
-    const sessions = await this.loadSessions(user, item, farm);
+    const sessions = await this.loadSessions(users[0], items[0], farms[0]);
 
-    const post = await this.loadPosts(user, sessions);
+    const post = await this.loadPosts(users[0], sessions);
 
-    await this.loadImages(user, post);
+    await this.loadImages(users[0], post);
+
+    await this.loadItemsToFarms(farms, items);
 
     return true;
   }
 
   async deleteDatabase() {
+    await this.itemToFarmsRepository
+      .createQueryBuilder()
+      .delete()
+      .where({})
+      .execute();
     // images
     await this.imagesRepository
       .createQueryBuilder()
@@ -130,34 +145,34 @@ export class SeedService {
       .execute();
   }
 
-  async loadUsers(): Promise<User> {
+  async loadUsers(): Promise<User[]> {
     const users: User[] = [];
 
     for (const user of SEED_USERS) {
       users.push(await this.usersService.create(user));
     }
 
-    return users[0];
+    return users;
   }
 
-  async loadItems(user: User): Promise<Item> {
+  async loadItems(user: User): Promise<Item[]> {
     const items: Item[] = [];
 
     for (const item of SEED_ITEMS) {
       items.push(await this.itemsService.create(item, user));
     }
 
-    return items[0];
+    return items;
   }
 
-  async loadFarms(user: User): Promise<Farm> {
+  async loadFarms(user: User): Promise<Farm[]> {
     const farms: Farm[] = [];
 
     for (const Farm of SEED_FARMS) {
       farms.push(await this.farmsService.create(Farm, user));
     }
 
-    return farms[0];
+    return farms;
   }
 
   async loadSessions(user: User, item: Item, farm: Farm): Promise<Session[]> {
@@ -176,7 +191,7 @@ export class SeedService {
   }
 
   async loadPosts(user: User, sessions: Session[]): Promise<Post> {
-    const postInputs = SEED_POSTS.map((post, i) => ({
+    const postInputs: CreatePostInput[] = SEED_POSTS.map((post, i) => ({
       sessionId: sessions[i].id,
       ...post,
     }));
@@ -205,4 +220,67 @@ export class SeedService {
       await this.imagesService.create(imageInput, user);
     }
   }
+
+  async loadItemsToFarms(farms: Farm[], items: Item[]): Promise<void> {
+    const shorterArray: number =
+      farms.length < items.length ? farms.length : items.length;
+
+    const relationInputs: CreateItemToFarmInput[] = [];
+
+    farms.forEach((farm, i, farmsArray) => {
+      /* delete farmsArray[i];
+      console.log(
+        '🚀 ~ file: seed.service.ts:245 ~ SeedService ~ farms.forEach ~ farmsArray',
+        farmsArray,
+      );
+      console.log(
+        '🚀 ~ file: seed.service.ts:245 ~ SeedService ~ farms.forEach ~ farms',
+        farms,
+      ); */
+      const quantityRelations = i + 1;
+      for (
+        let index = 0;
+        index < shorterArray && index < quantityRelations;
+        index++
+      ) {
+        const relationItF: CreateItemToFarmInput = {
+          farmId: farm.id,
+          itemId: items[index].id,
+        };
+        relationInputs.push(relationItF);
+      }
+    });
+    await Promise.all(
+      relationInputs.map((itemToFarm) => {
+        return this.itemToFarmService.create(itemToFarm);
+      }),
+    );
+  }
+  /* async loadFollowUps(
+    users: User[],
+    farms: Farm[],
+    items: Item[],
+  ): Promise<void> {
+    const relationInputs: CreateItemToFarmInput[] = [];
+
+    users.forEach((user, i) => {
+      const quantityRelations = i + 1;
+      for (
+        let index = 0;
+        index < shorterArray && index < quantityRelations;
+        index++
+      ) {
+        const relationItF: CreateItemToFarmInput = {
+          farmId: farm.id,
+          itemId: items[index].id,
+        };
+        relationInputs.push(relationItF);
+      }
+    });
+    await Promise.all(
+      relationInputs.map((itemToFarm) => {
+        return this.itemToFarmService.create(itemToFarm);
+      }),
+    );
+  } */
 }

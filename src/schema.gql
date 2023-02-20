@@ -147,6 +147,13 @@ enum ValidRoles {
   admin
 }
 
+type ItemToFarm {
+  id: ID!
+  date: DateTime!
+  item: Item!
+  farm: Farm!
+}
+
 type FollowUp {
   id: ID!
   date: DateTime!
@@ -156,11 +163,14 @@ type FollowUp {
   followedFarm: Farm
 }
 
-type ItemToFarm {
-  id: ID!
-  date: DateTime!
-  itemId: Item!
-  farmId: Farm!
+type FarmCategory {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type ItemCategory {
+  """Example field (placeholder)"""
+  exampleField: Int!
 }
 
 type Query {
@@ -172,9 +182,13 @@ type Query {
   Farm(term: String!): Farm!
   Sessions(offset: Int = 0, limit: Int = 10, search: String): [Session!]!
   Session(id: ID!): Session!
+  itemToFarm(id: Int!): ItemToFarm!
   followUps: [FollowUp!]!
   followUp(id: Int!): FollowUp!
-  itemToFarm(id: Int!): ItemToFarm!
+  farmCategories: [FarmCategory!]!
+  farmCategory(id: Int!): FarmCategory!
+  itemCategories: [ItemCategory!]!
+  itemCategory(id: Int!): ItemCategory!
 }
 
 type Mutation {
@@ -184,10 +198,16 @@ type Mutation {
 
   """Ejecuta la construcción de la base de datos"""
   executeSeed: Boolean!
-  createFollowUp(createFollowUpInput: CreateFollowUpInput!): FollowUp!
-  removeFollowUp(id: Int!): FollowUp!
   createItemToFarm(createItemInput: CreateItemToFarmInput!): ItemToFarm!
   removeItemToFarm(id: Int!): ItemToFarm!
+  createFollowUp(createFollowUpInput: CreateFollowUpInput!): FollowUp!
+  removeFollowUp(id: Int!): FollowUp!
+  createFarmCategory(createFarmCategoryInput: CreateFarmCategoryInput!): FarmCategory!
+  updateFarmCategory(updateFarmCategoryInput: UpdateFarmCategoryInput!): FarmCategory!
+  removeFarmCategory(id: Int!): FarmCategory!
+  createItemCategory(createItemCategoryInput: CreateItemCategoryInput!): ItemCategory!
+  updateItemCategory(updateItemCategoryInput: UpdateItemCategoryInput!): ItemCategory!
+  removeItemCategory(id: Int!): ItemCategory!
 }
 
 input CreateItemInput {
@@ -209,12 +229,34 @@ input CreateSessionInput {
   itemId: ID!
 }
 
+input CreateItemToFarmInput {
+  itemId: ID!
+  farmId: ID!
+}
+
 input CreateFollowUpInput {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
-input CreateItemToFarmInput {
-  itemId: ID!
-  farmId: ID!
+input CreateFarmCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateFarmCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateItemCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateItemCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

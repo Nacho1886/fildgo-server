@@ -25,12 +25,12 @@ export class ItemToFarm {
   @ManyToOne(() => Item, { lazy: true })
   @JoinColumn({ name: 'item_id' })
   @Field(() => Item)
-  itemId: Item;
+  item: Item;
 
   @ManyToOne(() => Farm, { lazy: true })
   @JoinColumn({ name: 'farm_id' })
   @Field(() => Farm)
-  farmId: Farm;
+  farm: Farm;
 
   @BeforeInsert()
   dateInsert() {

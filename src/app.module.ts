@@ -17,6 +17,8 @@ import { FarmsModule } from './farms/farms.module';
 import { SeedModule } from './seed/seed.module';
 import { FollowUpsModule } from './follow-ups/follow-ups.module';
 import { ItemToFarmModule } from './item-to-farm/item-to-farm.module';
+import { FarmCategoriesModule } from './farm-categories/farm-categories.module';
+import { ItemCategoriesModule } from './item-categories/item-categories.module';
 
 @Module({
   imports: [
@@ -80,6 +82,10 @@ import { ItemToFarmModule } from './item-to-farm/item-to-farm.module';
     FollowUpsModule,
 
     ItemToFarmModule,
+
+    FarmCategoriesModule,
+
+    ItemCategoriesModule,
   ],
 })
 export class AppModule {}
